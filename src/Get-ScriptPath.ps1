@@ -10,18 +10,17 @@ function Get-Segments {
 	return $parent + $leaf
 }
 
-function Combine-Segments {
+function Join-Segments {
 	param (
 		[parameter(ValueFromPipeline)][string[]]$segments
 	)
 	$segments = foreach ($segment in $segments) {
-		Sanitize-Segment -Segment $segment
+		Get-SanitizeSegment -Segment $segment
 	}
-	
 	return $segments -join '\'
 }
 
-function Sanitize-Segment {
+function Get-SanitizeSegment {
 	param (
 		[parameter(ValueFromPipeline)][string]$Segment
 	)
@@ -32,7 +31,13 @@ function script:Format-Parent {
 	param (
 		[parameter(ValueFromPipeline)][string]$Parent
 	)
-	$Parent.replace('\tests', '\src')
+	$segments = Get-Segments -Path $Parent
+	$index = $segments.IndexOf('tests')
+	if ($index -ne -1) {
+		$segments[$index] = 'src'
+	}
+	$Parent = Join-Segments -segments $segments
+	return $Parent
 }
 
 function script:Format-ScriptName {

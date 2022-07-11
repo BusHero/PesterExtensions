@@ -2,11 +2,15 @@ BeforeAll {
 	. "$PSScriptRoot\..\src\Get-ScriptPath.ps1"
 }
 
-Describe 'Format Test file' -Skip -Tag 'Pester' -ForEach @(
+Describe 'Format Test file' -Tag 'Pester' -ForEach @(
 	@{ Path = 'C:\.config\File.Tests.ps1'; Expected = 'C:\.config\File.ps1' }
+	@{ Path = 'C:/.config/File.Tests.ps1'; Expected = 'C:\.config\File.ps1' }
 	@{ Path = 'C:\.config\File1.Tests.ps1'; Expected = 'C:\.config\File1.ps1' }
 	@{ Path = 'C:\.config\tests\File.Tests.ps1'; Expected = 'C:\.config\src\File.ps1' }
 	@{ Path = 'C:\.config\tests\subdir\File.Tests.ps1'; Expected = 'C:\.config\src\subdir\File.ps1' }
+	@{ Path = 'C:\.config\\\\\tests\subdir\File.Tests.ps1'; Expected = 'C:\.config\src\subdir\File.ps1' }
+	@{ Path = 'C:////.config////tests////subdir\File.Tests.ps1'; Expected = 'C:\.config\src\subdir\File.ps1' }
+	@{ Path = 'C:////.config////tests////subdir\tests\File.Tests.ps1'; Expected = 'C:\.config\src\subdir\tests\File.ps1' }
 ) {
 	It 'Get Right Path' {
 		Get-ScriptPath -Path $path | Should -Be $expected
@@ -36,7 +40,7 @@ Describe 'Combine paths' -ForEach @(
 	@{ Segments = @('\\\foo\\\', '/bar'); Path = 'foo\bar' }
 ) {
 	It 'Path is formatted correctly' {
-		Combine-Segments -segments $segments | Should -Be $path
+		Join-Segments -segments $segments | Should -Be $path
 	}
 }
 
@@ -56,6 +60,6 @@ Describe 'Sanitize segment' -ForEach @(
 	@{ Segment = '\\foo\\'; SanitizedSegment = 'foo' }
 ) {
 	It 'Segment is sanitized' {
-		Sanitize-Segment -Segment $segment | Should -Be $sanitizedSegment
+		Get-SanitizeSegment -Segment $segment | Should -Be $sanitizedSegment
 	}
 }
