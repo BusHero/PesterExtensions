@@ -1,10 +1,52 @@
+function Get-Segments {
+	param (
+		[parameter(ValueFromPipeline)][string]$Path
+	)
+	if (!$path) {
+		return;
+	}
+	$parent = @(Split-Path -Path $Path -Parent | Get-Segments)
+	$leaf = Split-Path -Path $Path -Leaf
+	return $parent + $leaf
+}
+
+function Combine-Segments {
+	param (
+		[parameter(ValueFromPipeline)][string[]]$segments
+	)
+	$segments = foreach ($segment in $segments) {
+		Sanitize-Segment -Segment $segment
+	}
+	
+	return $segments -join '\'
+}
+
+function Sanitize-Segment {
+	param (
+		[parameter(ValueFromPipeline)][string]$Segment
+	)
+	return $segment -replace '/|\\'
+}
+
+function script:Format-Parent {
+	param (
+		[parameter(ValueFromPipeline)][string]$Parent
+	)
+	$Parent.replace('\tests', '\src')
+}
+
+function script:Format-ScriptName {
+	param (
+		[parameter(ValueFromPipeline)][string]$ScriptName
+	)
+	return $ScriptName -replace '.Tests'
+}
+
 function Get-ScriptPath {
 	param (
 		[string]$Path
 	)
-	$BaseName = Split-Path -Path $Path -Leaf
-	$Parent = Split-Path -Path $Path -Parent
-	$BaseName = $BaseName -replace '.Tests'
-	$Parent = $Parent.replace('\tests', '\src')
-	return "${Parent}\${BaseName}"
+	$Parent = Split-Path -Path $Path -Parent | Format-Parent
+	$BaseName = Split-Path -Path $Path -Leaf | Format-ScriptName
+	return Join-Path -Path $Parent -ChildPath $BaseName
 }
