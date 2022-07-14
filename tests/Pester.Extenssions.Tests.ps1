@@ -4,7 +4,7 @@ BeforeAll {
 
 Describe 'All the important fields are not empty' {
 	BeforeAll {
-		$ModuleInfo = Test-ModuleManifest -Path "${PSScriptRoot}\..\src\Pester.Extenssions.psd1"
+		$ModuleInfo = Test-ModuleManifest -Path "${PSScriptRoot}\..\src\PesterExtensions.psd1"
 	}
 	It '<property>' -TestCases @(
 		@{Property = 'Path' }
@@ -24,3 +24,4 @@ Describe 'All the important fields are not empty' {
 		$ModuleInfo."$property" | Should -Not -Be $null
 	}
 }
+

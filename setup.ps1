@@ -1,5 +1,5 @@
 New-ModuleManifest `
-	-Path "${PSScriptRoot}\src\Pester.Extenssions.psd1" `
+	-Path "${PSScriptRoot}\src\PesterExtensions.psd1" `
 	-Author 'Petru Cervac' `
 	-ProjectUri 'https://github.com/BusHero/pester.extenssions' `
 	-LicenseUri 'https://github.com/BusHero/pester.extenssions/blob/main/license' `
