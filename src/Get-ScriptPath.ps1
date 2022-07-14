@@ -17,7 +17,7 @@ function Join-Segments {
 	$segments = foreach ($segment in $segments) {
 		Get-SanitizeSegment -Segment $segment
 	}
-	return $segments -join '\'
+	return $segments -join [System.IO.Path]::DirectorySeparatorChar
 }
 
 function Get-SanitizeSegment {
