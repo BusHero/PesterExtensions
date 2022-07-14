@@ -1,5 +1,5 @@
 BeforeAll {
-	. "$PSScriptRoot\..\src\Get-ScriptPath.ps1"
+	Import-Module "$PSScriptRoot\..\src\PesterExtensions.psm1"
 }
 
 Describe 'Format Test file' -Tag 'Pester' -ForEach @(
