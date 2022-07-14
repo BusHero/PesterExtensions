@@ -13,6 +13,13 @@ Describe 'All the important fields are not empty' {
 		@{Property = 'Tags' }
 		@{Property = 'Version' }
 		@{Property = 'ExportedCmdlets' }
+		@{Property = 'ExportedVariables' }
+		@{Property = 'ExportedFunctions' }
+		@{Property = 'ExportedAliases' }
+		@{Property = 'Copyright' }
+		@{Property = 'CompanyName' }
+		@{Property = 'Guid' }
+		@{Property = 'ProjectUri' }
 	) {
 		$ModuleInfo."$property" | Should -Not -Be $null
 	}
