@@ -1,5 +1,5 @@
 BeforeAll {
-	Import-Module "$PSScriptRoot\..\src\PesterExtensions.psm1"
+	Import-Module "$PSScriptRoot\..\..\src\PesterExtensions\PesterExtensions.psm1"
 }
 
 Describe 'Format Test file' -Tag 'Pester' -ForEach @(
@@ -63,3 +63,28 @@ Describe 'Sanitize segment' -ForEach @(
 		Get-SanitizeSegment -Segment $segment | Should -Be $sanitizedSegment
 	}
 }
+
+Describe 'All the important fields are not empty' {
+	BeforeAll {
+		$ModuleInfo = Test-ModuleManifest -Path "${PSScriptRoot}\..\..\src\PesterExtensions\PesterExtensions.psd1"
+	}
+	It '<property>' -TestCases @(
+		@{Property = 'Path' }
+		@{Property = 'Description' }
+		@{Property = 'Author' }
+		@{Property = 'LicenseUri' }
+		@{Property = 'Tags' }
+		@{Property = 'Version' }
+		@{Property = 'ExportedCmdlets' }
+		@{Property = 'ExportedVariables' }
+		@{Property = 'ExportedFunctions' }
+		@{Property = 'ExportedAliases' }
+		@{Property = 'Copyright' }
+		@{Property = 'CompanyName' }
+		@{Property = 'Guid' }
+		@{Property = 'ProjectUri' }
+	) {
+		$ModuleInfo."$property" | Should -Not -Be $null
+	}
+}
+
