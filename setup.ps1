@@ -7,4 +7,4 @@ New-ModuleManifest `
 	-Tags Pester, Tests `
 	-RootModule 'PesterExtensions.psm1' `
 	-FunctionsToExport 'Get-ScriptPath' `
-	-ModuleVersion '0.1.0'
+	-ModuleVersion '0.2.0'

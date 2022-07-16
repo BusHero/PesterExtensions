@@ -37,7 +37,14 @@ Describe 'All the important fields are not empty' {
 	}
 }
 
-
+Describe "Validate the version" {
+	It "Major should be 0" {
+		$ModuleInfo.Version.Major | Should -Be 0
+	}
+	It "Minor should be 2" {
+		$ModuleInfo.Version.Minor | Should -Be 2
+	}
+}
 
 Describe 'Exported functions' {
 	Context 'stupid' -Foreach $stupid {

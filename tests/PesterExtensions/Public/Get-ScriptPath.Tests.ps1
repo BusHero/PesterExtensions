@@ -1,6 +1,31 @@
 BeforeAll {
-	$foo =  $PSCommandPath.Replace('.Tests.ps1','.ps1').Replace('\tests', '\src')
+	$foo = $PSCommandPath.Replace('.Tests.ps1', '.ps1').Replace('\tests', '\src')
 	. $foo
+}
+
+Describe 'Can specify extension' {
+	BeforeAll {
+		$Command = Get-Command Get-ScriptPath
+	}
+	It '<parameter>' -TestCases @(
+		@{Parameter = 'Path'; Mandatory = $true }
+		@{Parameter = 'Extension'; Mandatory = $false }
+	) {
+		$Command | Should -HaveParameter $parameter -Mandatory:$mandatory
+	} 
+}
+
+Describe 'Extensions' -ForEach @(
+	@{ Path = 'C:\.config\File.Tests.ps1'; Extension = 'Script'; Expected = 'C:\.config\File.ps1' }
+	@{ Path = 'C:\.config\File.Tests.ps1'; Extension = 'Manifest'; Expected = 'C:\.config\File.psd1' }
+	@{ Path = 'C:\.config\File.Tests.ps1'; Extension = 'Manifest'; Expected = 'C:\.config\File.psd1' }
+	@{ Path = 'C:\.config\File1.Tests.ps1'; Extension = 'Module'; Expected = 'C:\.config\File1.psm1' }
+	@{ Path = 'C:\.config\tests\File.Tests.ps1'; Extension = 'Manifest'; Expected = 'C:\.config\src\File.psd1' }
+	@{ Path = 'C:\.config\tests\subdir\File.Tests.ps1'; Extension = 'Manifest'; Expected = 'C:\.config\src\subdir\File.psd1' }
+) {
+	It '"Get-ScriptPath -Path <path> -Extension <extension> ==> <expected>"' {
+		Get-ScriptPath -Path $path -Extension $extension | Should -Be $expected
+	}
 }
 
 Describe 'Format Test file' -Tag 'Pester' -ForEach @(

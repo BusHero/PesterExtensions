@@ -40,18 +40,42 @@ function script:Format-Parent {
 	return $Parent
 }
 
+enum FileType {
+	Script
+	Module
+	Manifest
+}
+
 function script:Format-ScriptName {
 	param (
-		[parameter(ValueFromPipeline)][string]$ScriptName
+		[parameter(ValueFromPipeline)][string]$ScriptName,
+		[FileType]$Extension
 	)
-	return $ScriptName -replace '.Tests'
+	if ($Extension -eq [FileType]::Script) {
+		$StringExtension = 'ps1'
+	}
+	elseif ($Extension -eq [FileType]::Module) {
+		$StringExtension = 'psm1'
+	}
+	elseif ($Extension -eq [FileType]::Manifest) {
+		$StringExtension = 'psd1'
+	}
+	# $Extension = switch ($Extension) {
+	# 	[FileType]::Script { 'ps1' }
+	# 	[FileType]::Module { 'psm1' }
+	# 	[FileType]::Manifest { 'psd1' }
+	# }
+	$Name = (Split-Path $ScriptName -LeafBase) -replace '.Tests'
+	return "${Name}.${StringExtension}"
 }
+
 
 function Get-ScriptPath {
 	param (
-		[string]$Path
+		[parameter(Mandatory = $true)][string]$Path,
+		[parameter(Mandatory = $false)][FileType]$Extension = [FileType]::Script
 	)
 	$Parent = Split-Path -Path $Path -Parent | Format-Parent
-	$BaseName = Split-Path -Path $Path -Leaf | Format-ScriptName
+	$BaseName = Split-Path -Path $Path -Leaf | Format-ScriptName -Extension $Extension
 	return Join-Path -Path $Parent -ChildPath $BaseName
 }
