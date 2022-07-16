@@ -42,7 +42,7 @@ Describe "Validate the version" {
 		$ModuleInfo.Version.Major | Should -Be 0
 	}
 	It "Minor should be 2" {
-		$ModuleInfo.Version.Minor | Should -Be 2
+		$ModuleInfo.Version.Minor | Should -Be 3
 	}
 }
 
