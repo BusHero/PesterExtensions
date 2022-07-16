@@ -11,6 +11,7 @@ Describe 'Can specify extension' {
 		@{Parameter = 'Path'; Mandatory = $true }
 		@{Parameter = 'Extension'; Mandatory = $false }
 		@{Parameter = 'SourceDirectory'; Mandatory = $false }
+		@{Parameter = 'TestsDirectory'; Mandatory = $false }
 	) {
 		$Command | Should -HaveParameter $parameter -Mandatory:$mandatory
 	} 
@@ -34,10 +35,20 @@ Describe 'SourceDirectory' -ForEach @(
 	@{ Path = 'C:\.config\tests\File.Tests.ps1'; SourceDirectory = 'source'; Expected = 'C:\.config\source\File.ps1' }
 	@{ Path = 'C:\.config\File.Tests.ps1'; SourceDirectory = 'source'; Expected = 'C:\.config\File.ps1' }
 ) {
-	It 'Get-ScriptPath -Path <path> -SourceDirectory <SourceDirectory>' {
+	It 'Get-ScriptPath -Path <path> -SourceDirectory <SourceDirectory> ==> <expected>' {
 		Get-ScriptPath -Path $path -SourceDirectory $SourceDirectory | Should -Be $expected
 	}
 }
+
+Describe 'TestsDirectory' -ForEach @(
+	@{ Path = 'C:\.config\tst\File.Tests.ps1'; TestsDirectory = 'tst'; Expected = 'C:\.config\src\File.ps1' }
+	@{ Path = 'C:\.config\foo\File.Tests.ps1'; TestsDirectory = 'foo'; Expected = 'C:\.config\src\File.ps1' }
+) {
+	It 'Get-ScriptPath -Path <path> -TestsDirectory <SourceDirectory> ==> <expected>' {
+		Get-ScriptPath -Path $path -TestsDirectory $TestsDirectory | Should -Be $expected
+	}
+}
+
 Describe 'Format Test file' -Tag 'Pester' -ForEach @(
 	@{ Path = 'C:\.config\File.Tests.ps1'; Expected = 'C:\.config\File.ps1' }
 	@{ Path = 'C:/.config/File.Tests.ps1'; Expected = 'C:\.config\File.ps1' }

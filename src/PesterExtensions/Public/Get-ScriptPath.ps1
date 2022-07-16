@@ -30,10 +30,11 @@ function Get-SanitizeSegment {
 function script:Format-Parent {
 	param (
 		[parameter(ValueFromPipeline)][string]$Parent,
-		[parameter(ValueFromPipeline)][string]$SourceDirectory
+		[string]$SourceDirectory,
+		[string]$TestsDirectory
 	)
 	$segments = Get-Segments -Path $Parent
-	$index = $segments.IndexOf('tests')
+	$index = $segments.IndexOf($TestsDirectory)
 	if ($index -ne -1) {
 		$segments[$index] = $SourceDirectory
 	}
@@ -75,9 +76,10 @@ function Get-ScriptPath {
 	param (
 		[parameter(Mandatory = $true)][string]$Path,
 		[parameter(Mandatory = $false)][FileType]$Extension = [FileType]::Script,
-		[parameter(Mandatory = $false)][string]$SourceDirectory = 'src'
+		[parameter(Mandatory = $false)][string]$SourceDirectory = 'src',
+		[parameter(Mandatory = $false)][string]$TestsDirectory = 'tests'
 	)
-	$Parent = Split-Path -Path $Path -Parent | Format-Parent -SourceDirectory $SourceDirectory
+	$Parent = Split-Path -Path $Path -Parent | Format-Parent -SourceDirectory $SourceDirectory -TestsDirectory $TestsDirectory
 	$BaseName = Split-Path -Path $Path -Leaf | Format-ScriptName -Extension $Extension
 	return Join-Path -Path $Parent -ChildPath $BaseName
 }
