@@ -13,6 +13,6 @@ jobs:
     - name: Generate Module manifest file
       run: .\setup.ps1 -Revision ${{ github.run_number }}
     - name: Run tests
-      run: Invoke-Pester -Container @(New-PesterContainer -Path . -Data @{Revision = ${{ github.run_number }}})
+      run: .\tests.ps1 -RunNumber ${{ github.run_number }}
     - name: Upload PowerShell module
       run: Publish-Module -Path ${{ env.MODULE_PATH }} -NuGetApiKey ${{ secrets.POWERSHELL_GALLERY_KEY }}
