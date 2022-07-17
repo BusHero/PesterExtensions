@@ -39,8 +39,9 @@ Describe 'All the important fields are not empty' {
 		@{ Property = 'CompanyName' }
 		@{ Property = 'Guid' }
 		@{ Property = 'ProjectUri' }
+		@{ Property = 'ReleaseNotes' }
 	) {
-		$ModuleInfo."$property" | Should -Not -Be $null
+		$ModuleInfo."$property" | Should -Not -Be $null -Because "$property should be set up"
 	}
 }
 

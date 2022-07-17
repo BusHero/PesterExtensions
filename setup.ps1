@@ -1,3 +1,10 @@
+param(
+	[int]$Revision
+)
+
+$Version = '0.4.0'
+$releaseNotes = Get-Content -Path ".\releaseNotes\release_${Version}.md"
+
 New-ModuleManifest `
 	-Path "${PSScriptRoot}\src\PesterExtensions\PesterExtensions.psd1" `
 	-Author 'Petru Cervac' `
@@ -7,4 +14,5 @@ New-ModuleManifest `
 	-Tags Pester, Tests `
 	-RootModule 'PesterExtensions.psm1' `
 	-FunctionsToExport 'Get-ScriptPath' `
-	-ModuleVersion '0.4.0.0'
+	-ReleaseNotes $releaseNotes `
+	-ModuleVersion "${Version}.${Revision}"
