@@ -48,25 +48,25 @@ enum FileType {
 	Manifest
 }
 
+function Get-Extension {
+	param (
+		[parameter(ValueFromPipeline)]
+		[FileType]
+		$Extension
+	)
+	switch ($Extension) {
+		Script { return 'ps1'; }
+		Module { return 'psm1'; }
+		Manifest { return 'psd1'; }
+	}
+}
+
 function script:Format-ScriptName {
 	param (
 		[parameter(ValueFromPipeline)][string]$ScriptName,
 		[FileType]$Extension
 	)
-	if ($Extension -eq [FileType]::Script) {
-		$StringExtension = 'ps1'
-	}
-	elseif ($Extension -eq [FileType]::Module) {
-		$StringExtension = 'psm1'
-	}
-	elseif ($Extension -eq [FileType]::Manifest) {
-		$StringExtension = 'psd1'
-	}
-	# $Extension = switch ($Extension) {
-	# 	[FileType]::Script { 'ps1' }
-	# 	[FileType]::Module { 'psm1' }
-	# 	[FileType]::Manifest { 'psd1' }
-	# }
+	$StringExtension = Get-Extension -Extension $Extension
 	$Name = (Split-Path $ScriptName -LeafBase) -replace '.Tests'
 	return "${Name}.${StringExtension}"
 }

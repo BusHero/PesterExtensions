@@ -12,9 +12,9 @@ jobs:
     - uses: actions/checkout@v2
     - name: Generate Module manifest file
       run: .\setup.ps1
-    - name: Run tests
-      run: Invoke-Pester .\tests\
     - name: Updated module version
-      run: .\update-version.ps1 -Path ${{ env.MODULE_MANIFEST_PATH }} -build ${{ github.run_number }}
+      run: .\update-version.ps1 -Path ${{ env.MODULE_MANIFEST_PATH }} -revision ${{ github.run_number }}
+    - name: Run tests
+      run: Invoke-Pester -Container @(New-PesterContainer -Path . -Data @{Revision = ${{ github.run_number }}})
     - name: Upload PowerShell module
-      run: Publish-Module -Path ${{ env.MODULE_PATH }} -NuGetApiKey ${{ secrets.POWERSHELL_GALLERY_KEY }}    
+      run: Publish-Module -Path ${{ env.MODULE_PATH }} -NuGetApiKey ${{ secrets.POWERSHELL_GALLERY_KEY }}

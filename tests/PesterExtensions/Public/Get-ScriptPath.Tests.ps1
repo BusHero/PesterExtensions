@@ -1,3 +1,4 @@
+
 BeforeAll {
 	$foo = $PSCommandPath.Replace('.Tests.ps1', '.ps1').Replace('\tests', '\src')
 	. $foo

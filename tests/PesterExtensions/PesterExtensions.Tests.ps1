@@ -1,3 +1,10 @@
+param(
+	[parameter(Mandatory)]
+	[int]
+	$Revision
+)
+
+
 BeforeDiscovery {
 	$CommandNames = @(
 		'Get-ScriptPath'
@@ -37,17 +44,23 @@ Describe 'All the important fields are not empty' {
 	}
 }
 
-Describe "Validate the version" {
-	It "Major should be 0" {
+Describe 'Validate the version' {
+	It 'Major should be 0' {
 		$ModuleInfo.Version.Major | Should -Be 0
 	}
-	It "Minor should be 2" {
-		$ModuleInfo.Version.Minor | Should -Be 3
+	It 'Minor should be 3' {
+		$ModuleInfo.Version.Minor | Should -Be 4
+	}
+	It 'Build should be 0' {
+		$ModuleInfo.Version.Build | Should -Be 0
+	}
+	It 'Revision should be <revision>' {
+		$ModuleInfo.Version.Revision | Should -Be $revision
 	}
 }
 
 Describe 'Exported functions' {
-	Context 'stupid' -Foreach $stupid {
+	Context 'stupid' -ForEach $stupid {
 		It 'Module manifest contains all the exported commands' {
 			$ModuleInfo.ExportedCommands.Keys | Should -Be $CommandNames
 		}
