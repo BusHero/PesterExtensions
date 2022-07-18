@@ -15,4 +15,5 @@ New-ModuleManifest `
 	-RootModule 'PesterExtensions.psm1' `
 	-FunctionsToExport 'Get-ScriptPath' `
 	-ReleaseNotes $releaseNotes `
+	-HelpInfoUri 'https://github.com/BusHero/pester.extenssions' `
 	-ModuleVersion "${Version}.${Revision}"

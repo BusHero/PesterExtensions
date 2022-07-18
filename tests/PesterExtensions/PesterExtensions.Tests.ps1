@@ -24,7 +24,7 @@ BeforeAll {
 Describe 'All the important fields are not empty' {
 	BeforeAll {
 	}
-	It '<property>' -TestCases @(
+	It '<property> should not be null' -TestCases @(
 		@{ Property = 'Path' }
 		@{ Property = 'Description' }
 		@{ Property = 'Author' }
@@ -40,6 +40,7 @@ Describe 'All the important fields are not empty' {
 		@{ Property = 'Guid' }
 		@{ Property = 'ProjectUri' }
 		@{ Property = 'ReleaseNotes' }
+		@{ Property = 'HelpInfoURI' }
 	) {
 		$ModuleInfo."$property" | Should -Not -Be $null -Because "$property should be set up"
 	}
