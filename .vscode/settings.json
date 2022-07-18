@@ -1,0 +1,8 @@
+{
+	"xml.fileAssociations": [
+		{
+			"pattern": "**/helpinfo.xml",
+			"systemId": "resources/schemas/HelpInfo.xsd"
+		}
+	]
+}
