@@ -12,10 +12,10 @@ New-ModuleManifest `
 	-Author 'Petru Cervac' `
 	-Description 'Some description here and there' `
 	-ProjectUri 'https://github.com/BusHero/pester.extenssions' `
-	-LicenseUri 'https://github.com/BusHero/pester.extenssions/blob/main/license' `
+	-LicenseUri 'https://github.com/BusHero/pester.extenssions/main/license' `
 	-Tags Pester, Tests `
 	-RootModule 'PesterExtensions.psm1' `
 	-FunctionsToExport 'Get-ScriptPath' `
 	-ReleaseNotes $releaseNotes `
-	-HelpInfoUri 'https://github.com/BusHero/PesterExtensions/blob/main' `
+	-HelpInfoUri 'https://raw.githubusercontent.com/BusHero/PesterExtensions/main/help' `
 	-ModuleVersion "${Version}.${Revision}"
