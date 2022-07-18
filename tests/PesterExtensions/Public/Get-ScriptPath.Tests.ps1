@@ -8,14 +8,20 @@ Describe 'Can specify extension' {
 	BeforeAll {
 		$Command = Get-Command Get-ScriptPath
 	}
-	It '<parameter>' -TestCases @(
+	Context 'Parameters' -ForEach @(
 		@{Parameter = 'Path'; Mandatory = $true }
 		@{Parameter = 'Extension'; Mandatory = $false }
 		@{Parameter = 'SourceDirectory'; Mandatory = $false }
 		@{Parameter = 'TestsDirectory'; Mandatory = $false }
 	) {
-		$Command | Should -HaveParameter $parameter -Mandatory:$mandatory
-	} 
+		It '<parameter>' {
+			$Command | Should -HaveParameter $parameter -Mandatory:$mandatory
+		} 
+		It '<parameter> should be documented' {
+			$help = Get-Help 'Get-ScriptPath' -Parameter $parameter
+			$help.Description | Should -Not -BeNullOrEmpty -Because "$parameter should have description"
+		}
+	}
 }
 
 Describe 'Extensions' -ForEach @(
@@ -109,5 +115,13 @@ Describe 'Sanitize segment' -ForEach @(
 ) {
 	It 'Segment is sanitized' {
 		Get-SanitizeSegment -Segment $segment | Should -Be $sanitizedSegment
+	}
+}
+
+Describe 'Documentation' -ForEach @(
+	@{ Property = 'Examples' }
+) {
+	It '<property> should exist' {
+
 	}
 }

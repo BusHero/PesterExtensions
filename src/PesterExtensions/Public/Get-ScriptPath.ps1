@@ -82,4 +82,32 @@ function Get-ScriptPath {
 	$Parent = Split-Path -Path $Path -Parent | Format-Parent -SourceDirectory $SourceDirectory -TestsDirectory $TestsDirectory
 	$BaseName = Split-Path -Path $Path -Leaf | Format-ScriptName -Extension $Extension
 	return Join-Path -Path $Parent -ChildPath $BaseName
+	<#
+		.SYNOPSIS
+		Get-ScriptPath gets the path to the script coresponding to the test file.
+		
+		.OUTPUTS
+		System.String. Get-ScriptPath returns the path to the script that is tested.
+		
+		.PARAMETER Path
+		The path to the test script
+
+		.PARAMETER Extension
+		The type of the script to be generated. Depending on the type of the script, a different extension will be used. 
+		The default value is script 
+
+		.PARAMETER SourceDirectory
+		The name of the directory where the source files are located. The default value is src
+
+		.PARAMETER TestsDirectory
+		The name of the directory where the tests files are located. The default value is tests
+
+		.EXAMPLE
+		PS> Get-ScriptPath -Path C:\project\tests\Foo.Tests.ps1
+		C:\project\src\Foo.ps1
+		
+		.EXAMPLE
+		PS> Get-ScriptPath -Path C:\project\tests\Foo.Tests.ps1 -SourceDirector source
+		C:\project\source\Foo.ps1
+	#>
 }

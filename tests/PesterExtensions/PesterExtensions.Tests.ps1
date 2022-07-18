@@ -69,10 +69,26 @@ Describe 'Exported functions' {
 		It 'Imported Module contains all the exported commands' {
 			$ImportedModule.ExportedCommands.Keys | Should -Be $CommandNames
 		}
-
 	}
-	It 'asd' -TestCases $Commands {
+	It '<command> is exported' -TestCases $Commands {
 		Get-Command -Name $command -ErrorAction Ignore | Should -Not -Be $null -Because "$command function should be exporeted"
+	}
+
+	It '<datatype> is exported' -TestCases $DataTypes {
+		
+	}
+}
+
+Describe 'Documentation' {
+	BeforeAll {
+		$help = Get-Help Get-ScriptPath
+	}
+	It '<property>' -TestCases @(
+		@{ Property = 'returnValues' }
+		@{ Property = 'synopsis' }
+		@{ Property = 'examples' }
+	) {
+		$help."$property" | Should -Not -BeNullOrEmpty
 	}
 }
 
