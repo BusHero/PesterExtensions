@@ -1,10 +1,10 @@
 param(
-	[int]$Revision
+	[int]$Revision = 0
 )
 
 $GUID = 'ca565820-19b6-4420-b671-bbd6268b866c'
-$Version = '0.4.0'
-$releaseNotes = Get-Content -Path ".\releaseNotes\release_${Version}.md"
+$Version = '0.5.0'
+$releaseNotes = "$(Get-Content -Path '.\releaseNotes\release.md')"
 
 New-ModuleManifest `
 	-Guid $GUID `
@@ -15,7 +15,7 @@ New-ModuleManifest `
 	-LicenseUri 'https://github.com/BusHero/pester.extenssions/main/license' `
 	-Tags Pester, Tests `
 	-RootModule 'PesterExtensions.psm1' `
-	-FunctionsToExport 'Get-ScriptPath' `
+	-FunctionsToExport 'Get-ScriptPath', 'Get-ProjectRoot' `
 	-ReleaseNotes $releaseNotes `
 	-HelpInfoUri 'https://raw.githubusercontent.com/BusHero/PesterExtensions/main/help' `
 	-ModuleVersion "${Version}.${Revision}"

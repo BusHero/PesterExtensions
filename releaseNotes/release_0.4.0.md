@@ -1,1 +1,0 @@
-# Some notes here and there

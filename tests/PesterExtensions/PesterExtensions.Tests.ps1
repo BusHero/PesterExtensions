@@ -7,9 +7,10 @@ param(
 
 BeforeDiscovery {
 	$CommandNames = @(
-		'Get-ScriptPath'
-	)
-	$script:Commands = foreach ($command in $CommandNames) { @{ Command = $command } }
+		'Get-ScriptPath',
+		'Get-ProjectRoot'
+	) | Sort-Object
+	$script:Commands = foreach ($command in $CommandNames) { @{ Command = $command } } 
 	$script:Stupid = @( @{CommandNames = $CommandNames } )
 }
 
@@ -50,8 +51,8 @@ Describe 'Validate the version' {
 	It 'Major should be 0' {
 		$ModuleInfo.Version.Major | Should -Be 0
 	}
-	It 'Minor should be 3' {
-		$ModuleInfo.Version.Minor | Should -Be 4
+	It 'Minor should be 5' {
+		$ModuleInfo.Version.Minor | Should -Be 5
 	}
 	It 'Build should be 0' {
 		$ModuleInfo.Version.Build | Should -Be 0
@@ -64,10 +65,10 @@ Describe 'Validate the version' {
 Describe 'Exported functions' {
 	Context 'stupid' -ForEach $stupid {
 		It 'Module manifest contains all the exported commands' {
-			$ModuleInfo.ExportedCommands.Keys | Should -Be $CommandNames
+			$ModuleInfo.ExportedCommands.Keys | Sort-Object | Should -Be $CommandNames
 		}
 		It 'Imported Module contains all the exported commands' {
-			$ImportedModule.ExportedCommands.Keys | Should -Be $CommandNames
+			$ImportedModule.ExportedCommands.Keys | Sort-Object | Should -Be $CommandNames
 		}
 	}
 	It '<command> is exported' -TestCases $Commands {
