@@ -1,2 +1,0 @@
-C:\Users\petru.cervac\projects\powershell\pester.extenssions\help\en-Us\about_foo.txt
-C:\Users\petru.cervac\projects\powershell\pester.extenssions\help\en-Us\about_bar.txt

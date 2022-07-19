@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<helpItems schema="maml" xmlns="http://msh">
+	<command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp">
+		<command:details>
+			<command:name>Get-ScriptPath</command:name>
+			<command:verb>Get</command:verb>
+			<command:noun>ScriptPath</command:noun>
+			<maml:description>
+				<maml:para>Some description here and there</maml:para>
+			</maml:description>
+		</command:details>
+		<maml:description>
+			<maml:para>Add a Terminal-Icons color theme for the current user. The theme data is stored in the user's profile</maml:para>
+		</maml:description>
+		<command:parameters>
+			<command:parameter required="true" variableLength="true" globbing="true" pipelineInput="True (ByPropertyName, ByValue)" position="1" aliases="none">
+				<maml:name>Path</maml:name>
+				<maml:description>
+					<maml:para>The path to the test script</maml:para>
+				</maml:description>
+				<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+				<dev:type>
+					<maml:name>String</maml:name>
+					<maml:uri />
+				</dev:type>
+				<dev:defaultValue>None</dev:defaultValue>
+			</command:parameter>
+
+			<command:parameter required="true" variableLength="true" globbing="true" pipelineInput="True (ByPropertyName, ByValue)" position="1" aliases="none">
+				<maml:name>Extension</maml:name>
+				<maml:description>
+					<maml:para>The type of the script to be generated. Depending on the type of the script, a different extension will be used. 
+						The default value is script </maml:para>
+				</maml:description>
+				<command:parameterValue required="false" variableLength="false">String</command:parameterValue>
+				<dev:type>
+					<maml:name>String</maml:name>
+					<maml:uri />
+				</dev:type>
+				<dev:defaultValue>None</dev:defaultValue>
+			</command:parameter>
+
+			<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="True (ByPropertyName)" position="1" aliases="PSPath">
+				<maml:name>SourceDirectory</maml:name>
+				<maml:description>
+					<maml:para>The name of the directory where the source files are located.</maml:para>
+				</maml:description>
+				<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+				<dev:type>
+					<maml:name>String</maml:name>
+					<maml:uri />
+				</dev:type>
+				<dev:defaultValue>src</dev:defaultValue>
+			</command:parameter>
+
+			<command:parameter required="false" variableLength="true" globbing="false" pipelineInput="True (ByPropertyName)" position="1" aliases="PSPath">
+				<maml:name>TestsDirectory</maml:name>
+				<maml:description>
+					<maml:para>The name of the directory where the tests files are located.</maml:para>
+				</maml:description>
+				<command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+				<dev:type>
+					<maml:name>String</maml:name>
+					<maml:uri />
+				</dev:type>
+				<dev:defaultValue>tests</dev:defaultValue>
+			</command:parameter>
+		</command:parameters>
+		<command:inputTypes>
+			<command:inputType>
+				<dev:type>
+					<maml:name>System.String</maml:name>
+				</dev:type>
+				<maml:description>
+					<maml:para></maml:para>
+				</maml:description>
+			</command:inputType>
+			<command:inputType>
+				<dev:type>
+					<maml:name>You can pipe a string that contains a path to 'Add-TerminalIconsColorTheme'.</maml:name>
+				</dev:type>
+				<maml:description>
+					<maml:para></maml:para>
+				</maml:description>
+			</command:inputType>
+		</command:inputTypes>
+		<command:returnValues>
+			<command:returnValue>
+				<dev:type>
+					<maml:name>None.</maml:name>
+				</dev:type>
+				<maml:description>
+					<maml:para></maml:para>
+				</maml:description>
+			</command:returnValue>
+		</command:returnValues>
+		<command:examples>
+			<command:example>
+				<maml:title>-------------------------- EXAMPLE 1 --------------------------</maml:title>
+				<dev:code>Get-ScriptPath -Path C:\project\tests\Foo.Tests.ps1</dev:code>
+				<dev:remarks>
+					<maml:para>Get</maml:para>
+				</dev:remarks>
+			</command:example>
+			<command:example>
+				<maml:title>-------------------------- EXAMPLE 2 --------------------------</maml:title>
+				<dev:code>Get-ScriptPath -Path C:\project\tests\Foo.Tests.ps1 -SourceDirectory source</dev:code>
+				<dev:remarks>
+					<maml:para>Add all color themes contained in the folder ./path/to/colorthemes and add them, overwriting existing ones if needed.</maml:para>
+				</dev:remarks>
+			</command:example>
+		</command:examples>
+		<command:relatedLinks>
+			<maml:navigationLink>
+				<maml:linkText>Add-TerminalIconsIconTheme</maml:linkText>
+				<maml:uri></maml:uri>
+			</maml:navigationLink>
+		</command:relatedLinks>
+	</command:command>
+
+</helpItems>
