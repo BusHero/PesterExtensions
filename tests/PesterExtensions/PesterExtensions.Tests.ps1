@@ -73,35 +73,6 @@ Describe 'Exported functions' {
 	It '<command> is exported' -TestCases $Commands {
 		Get-Command -Name $command -ErrorAction Ignore | Should -Not -Be $null -Because "$command function should be exporeted"
 	}
-
-	It '<datatype> is exported' -TestCases $DataTypes {
-		
-	}
-}
-
-Describe 'Documentation' {
-	BeforeAll {
-		$help = Get-Help Get-ScriptPath
-	}
-	It '<property>' -TestCases @(
-		@{ Property = 'returnValues' }
-		@{ Property = 'synopsis' }
-		@{ Property = 'examples' }
-	) {
-		$help."$property" | Should -Not -BeNullOrEmpty
-	}
-	It 'details' {
-		$help.details.Verb | Should -Be 'Get'
-	}
-	It 'name' {
-		$help.details.name | Should -Be 'Get-ScriptPath'
-	}
-	It 'noun' {
-		$help.details.noun | Should -Be 'ScriptPath'
-	}
-	It 'description' {
-		$help.details.description | Should -Not -BeNullOrEmpty
-	}
 }
 
 AfterAll {
