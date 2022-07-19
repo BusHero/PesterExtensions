@@ -9,16 +9,16 @@ BeforeDiscovery {
 	$CommandNames = @(
 		'Get-ScriptPath'
 	)
-	$Commands = foreach ($command in $CommandNames) { @{ Command = $command } }
-	$Stupid = @( @{CommandNames = $CommandNames } )
+	$script:Commands = foreach ($command in $CommandNames) { @{ Command = $command } }
+	$script:Stupid = @( @{CommandNames = $CommandNames } )
 }
 
 BeforeAll {
 	$ModulePath = $PSCommandPath.Replace('.Tests.ps1', '.psd1').Replace('\tests', '\src')
-	$ModuleInfo = Test-ModuleManifest -Path $ModulePath
+	$script:ModuleInfo = Test-ModuleManifest -Path $ModulePath
 
 	Import-Module $ModulePath
-	$ImportedModule = Get-Module 'PesterExtensions'
+	$script:ImportedModule = Get-Module 'PesterExtensions'
 }
 
 Describe 'All the important fields are not empty' {

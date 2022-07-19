@@ -6,7 +6,7 @@ BeforeAll {
 
 Describe 'Can specify extension' {
 	BeforeAll {
-		$Command = Get-Command Get-ScriptPath
+		$script:Command = Get-Command Get-ScriptPath
 	}
 	Context 'Parameters' -ForEach @(
 		@{Parameter = 'Path'; Mandatory = $true }

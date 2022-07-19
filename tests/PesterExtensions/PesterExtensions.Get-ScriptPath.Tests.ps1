@@ -1,14 +1,14 @@
 BeforeAll {
 	$ModulePath = $PSCommandPath.Replace('.Get-ScriptPath.Tests.ps1', '.psd1').Replace('\tests', '\src')
-	$ModuleInfo = Test-ModuleManifest -Path $ModulePath
+	$script:ModuleInfo = Test-ModuleManifest -Path $ModulePath
 
 	Import-Module $ModulePath
-	$ImportedModule = Get-Module 'PesterExtensions'
+	$script:ImportedModule = Get-Module 'PesterExtensions'
 }
 
 Describe 'Documentation' {
 	BeforeAll {
-		$help = Get-Help Get-ScriptPath
+		$script:help = Get-Help Get-ScriptPath
 	}
 	It '<property>' -TestCases @(
 		@{ Property = 'returnValues' }
