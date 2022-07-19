@@ -73,7 +73,7 @@ function script:Format-ScriptName {
 
 
 function Get-ScriptPath {
-	#.ExternalHelp ..\en-us\PesterExtensions.xml
+	#.ExternalHelp ..\en-Us\PesterExtensions.psm1-help.xml
 	param (
 		[parameter(Mandatory = $true)][string]$Path,
 		[parameter(Mandatory = $false)][FileType]$Extension = [FileType]::Script,
