@@ -5,7 +5,7 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
@@ -13,7 +13,8 @@ jobs:
         id: tagger
         uses: jimschubert/query-tag-action@v1
         with:
-          exclude: 'v.*-rc*'
+          include: v*
+          exclude: '*-rc*'
           commit-ish: 'HEAD~'
       - name: Show Tag
         id: display
