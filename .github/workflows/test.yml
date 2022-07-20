@@ -11,7 +11,7 @@ jobs:
       - name: Find Tag
         id: tagger
         run: |
-          foo='foo'
+          foo=$(git fetch --prune && git describe --tags --abbrev=0 --match 'v*' --exclude '*-rc*' 'HEAD~')
           echo "::set-output name=tag::$foo"
       - name: Show Tag
         id: display
