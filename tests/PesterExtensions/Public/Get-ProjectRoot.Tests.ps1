@@ -1,13 +1,14 @@
 BeforeAll {
-	$foo = $PSCommandPath.Replace('.Tests.ps1', '.ps1').Replace('\tests', '\src')
-	. $foo
+	. $PSCommandPath.Replace('.Tests.ps1', '.ps1').Replace('\tests', '\src')
 }
 
 
 
 Describe 'Get project root' {
-	It 'Projects' {
-		Get-ProjectRoot -Path 'C:\projects\project\foo.ps1' | Should -Be 'C:\projects\project'
+	It 'Project 1' -TestCases @(
+		@{ Path = 'C:\projects\project\foo.ps1'; ProjectRoot = 'C:\projects\project' }
+	) {
+		Get-ProjectRoot -Path $Path | Should -Be $ProjectRoot
 	}
 }
 
