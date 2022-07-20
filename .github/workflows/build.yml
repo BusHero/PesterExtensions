@@ -1,5 +1,7 @@
-name: Publish to Powershell gallery
+name: Build
+
 on: push
+
 env:
   MODULE_PATH: .\src\PesterExtensions
   MODULE_MANIFEST_PATH: .\src\PesterExtensions\PesterExtensions.psd1
@@ -19,5 +21,3 @@ jobs:
       run: .\setup.ps1 -Revision ${{ github.run_number }}
     - name: Run tests
       run: .\tests.ps1 -RunNumber ${{ github.run_number }}
-    - name: Upload PowerShell module
-      run: Publish-Module -Path ${{ env.MODULE_PATH }} -NuGetApiKey ${{ secrets.POWERSHELL_GALLERY_KEY }}
