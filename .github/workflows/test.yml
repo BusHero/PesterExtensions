@@ -13,10 +13,11 @@ jobs:
       - name: Find Tag
         id: tagger
         run: |
-          foo=$(git fetch --prune && git describe --tags --abbrev=0 --match 'v*' --exclude '*-rc*' 'HEAD~')
-          echo "::set-output name=tag::$foo"
+          git fetch --prune
+          $foo = git describe --tags --abbrev=0 --match 'v*' --exclude '*-rc*' 'HEAD~'
+          Write-Output "::set-output name=tag::$foo"
       - name: Show Tag
         id: display
         run: |
-          tag='${{steps.tagger.outputs.tag}}'
-          echo "Output from Find Tag: ${tag:1}"
+          tag='${{steps.tagger.outputs.tag}}'.substring(1)
+          Write-Output "Output from Find Tag: $tag"
