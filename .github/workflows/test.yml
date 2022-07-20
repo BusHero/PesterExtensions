@@ -13,7 +13,7 @@ jobs:
         id: tagger
         uses: jimschubert/query-tag-action@v1
         with:
-          exclude: '*-rc*'
+          exclude: 'v.*-rc*'
           commit-ish: 'HEAD~'
       - name: Show Tag
         id: display
