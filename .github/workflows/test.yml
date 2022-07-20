@@ -9,5 +9,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - name: Check git tags
-        run: echo "GIT_TAG=`echo $(git describe --tags --abbrev=0)`"
+      - name: Query Tag
+        uses: jimschubert/query-tag-action@v2
+      - name: Show Tag
+          id: display
+          run: |
+            echo 'Output from Find Tag: ${{steps.tagger.outputs.tag}}'
