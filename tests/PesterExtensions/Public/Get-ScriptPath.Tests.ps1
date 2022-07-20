@@ -1,28 +1,9 @@
-
 BeforeAll {
 	$foo = $PSCommandPath.Replace('.Tests.ps1', '.ps1').Replace('\tests', '\src')
 	. $foo
 }
 
-Describe 'Can specify extension' {
-	BeforeAll {
-		$script:Command = Get-Command Get-ScriptPath
-	}
-	Context 'Parameters' -ForEach @(
-		@{Parameter = 'Path'; Mandatory = $true }
-		@{Parameter = 'Extension'; Mandatory = $false }
-		@{Parameter = 'SourceDirectory'; Mandatory = $false }
-		@{Parameter = 'TestsDirectory'; Mandatory = $false }
-	) {
-		It '<parameter>' {
-			$Command | Should -HaveParameter $parameter -Mandatory:$mandatory
-		} 
-		It '<parameter> should be documented' {
-			$help = Get-Help 'Get-ScriptPath' -Parameter $parameter
-			$help.Description | Should -Not -BeNullOrEmpty -Because "$parameter should have description"
-		}
-	}
-}
+
 
 Describe 'Extensions' -ForEach @(
 	@{ Path = 'C:\.config\File.Tests.ps1'; Extension = 'Script'; Expected = 'C:\.config\File.ps1' }
@@ -115,13 +96,5 @@ Describe 'Sanitize segment' -ForEach @(
 ) {
 	It 'Segment is sanitized' {
 		Get-SanitizeSegment -Segment $segment | Should -Be $sanitizedSegment
-	}
-}
-
-Describe 'Documentation' -ForEach @(
-	@{ Property = 'Examples' }
-) {
-	It '<property> should exist' {
-
 	}
 }

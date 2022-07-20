@@ -2,16 +2,14 @@ param(
 	[int]$RunNumber
 )
 
-$container0 = New-PesterContainer `
-	-Path '.\tests\PesterExtensions\Public'
+$configuration = New-PesterConfiguration -Hashtable @{
+	Run = @{
+		Container = @(
+			New-PesterContainer -Path 'PesterExtensions.Tests.ps1' -Data @{ Revision = $RunNumber };
+			New-PesterContainer -Path '.\tests\*\Public';
+			New-PesterContainer -Path 'PesterExtensions.*.Tests.ps1'
+		)
+	}
+}
 
-$container1 = New-PesterContainer `
-	-Path '.\tests\PesterExtensions\PesterExtensions.Tests.ps1' `
-	-Data @{ Revision = $RunNumber }
-
-$container2 = New-PesterContainer `
-	-Path '.\tests\PesterExtensions\PesterExtensions.Get-ScriptPath.Tests.ps1'
-
-Invoke-Pester -Container $container0 
-Invoke-Pester -Container $container1 
-Invoke-Pester -Container $container2
+Invoke-Pester -Configuration $configuration

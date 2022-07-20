@@ -6,6 +6,26 @@ BeforeAll {
 	$script:ImportedModule = Get-Module 'PesterExtensions'
 }
 
+Describe 'Parameters' {
+	BeforeAll {
+		$script:Command = Get-Command Get-ScriptPath
+	}
+	Context 'Parameters' -ForEach @(
+		@{Parameter = 'Path'; Mandatory = $true }
+		@{Parameter = 'Extension'; Mandatory = $false }
+		@{Parameter = 'SourceDirectory'; Mandatory = $false }
+		@{Parameter = 'TestsDirectory'; Mandatory = $false }
+	) {
+		It '<parameter>' {
+			$Command | Should -HaveParameter $parameter -Mandatory:$mandatory
+		} 
+		It '<parameter> should be documented' {
+			$help = Get-Help 'Get-ScriptPath' -Parameter $parameter
+			$help.Description | Should -Not -BeNullOrEmpty -Because "$parameter should have description"
+		}
+	}
+}
+
 Describe 'Documentation' {
 	BeforeAll {
 		$script:help = Get-Help Get-ScriptPath
