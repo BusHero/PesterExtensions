@@ -31,10 +31,32 @@ Describe 'Get project root' {
 	}
 }
 
-Describe 'Specify projects root name' {
-	BeforeDiscovery {
-
+Describe 'Specify root folder name' -ForEach @(
+	@{ Path = 'foo\bar\baz'; Name = 'foo'; ProjectRoot = 'foo' }
+	@{ Path = 'foo\bar\baz'; Name = 'bar'; ProjectRoot = 'foo\bar' }
+	@{ Path = 'Projects\foo\bar\baz'; Name = 'bar'; ProjectRoot = 'projects\foo\bar' }
+) {
+	BeforeAll {
+		$Path = "${TestDrive}\${Path}"
+		$ProjectRoot = "${TestDrive}\${ProjectRoot}"
+		New-Item -Path $Path `
+			-ItemType File `
+			-Force
 	}
+
+	It 'foo' {
+		Get-ProjectRoot -Path $path -Name $name | Should -Be $ProjectRoot
+	}
+
+	AfterAll {
+		Remove-Item -Path $Path `
+			-Recurse `
+			-Force `
+			-ErrorAction Ignore
+	}
+}
+
+Describe 'Specify projects root name' {
 	Context '|"<path>" ==> "<projectroot>"|' -ForEach @(
 		@{ Path = '\foo\project1\foo.ps1'; ProjectsRootName = 'foo'; ProjectRoot = '\foo\project1' }
 		@{ Path = '\bar\project2\foo.ps1'; ProjectsRootName = 'bar'; ProjectRoot = '\bar\project2' }
@@ -46,7 +68,7 @@ Describe 'Specify projects root name' {
 			$ProjectRoot = Join-Path -Path $TestDrive -ChildPath $ProjectRoot
 			New-Item -Path $path `
 				-ItemType File `
-				-Force	
+				-Force
 		}
 		It 'asd' {
 			Get-ProjectRoot -Path $Path -ProjectsRoot $ProjectsRootName | Should -Be $ProjectRoot

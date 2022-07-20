@@ -14,6 +14,7 @@ Describe 'Parameters' {
 	Context 'Parameters' -ForEach @(
 		@{Parameter = 'Path'; Mandatory = $true }
 		@{Parameter = 'ProjectsRoot'; Mandatory = $false }
+		@{Parameter = 'Name'; Mandatory = $false }
 	) {
 		It '"<commandname>" should have parameter "<parameter>" ' {
 			$Command | Should -HaveParameter $parameter -Mandatory:$mandatory
