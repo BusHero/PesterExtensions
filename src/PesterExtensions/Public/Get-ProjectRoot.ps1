@@ -3,6 +3,7 @@
 function Get-ProjectRoot {
 	[CmdletBinding()]
 	param (
+		[ValidateScript({Test-Path $_})]
 		[Parameter(Mandatory = $true)]
 		[string]
 		$Path,
