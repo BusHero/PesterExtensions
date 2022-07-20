@@ -12,7 +12,7 @@ jobs:
         id: tagger
         run: |
           foo='foo'
-          echo '::set-output name=tag::$foo'
+          echo "::set-output name=tag::$foo"
       - name: Show Tag
         id: display
         run: |
