@@ -11,7 +11,8 @@ jobs:
       - name: Find Tag
         id: tagger
         run: |
-          echo '::set-output name=tag::foo'
+          foo='foo'
+          echo '::set-output name=tag::$foo'
       - name: Show Tag
         id: display
         run: |
