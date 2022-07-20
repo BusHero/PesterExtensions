@@ -10,4 +10,4 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Check git tags
-        run: git tag
+        run: echo "$(git tag)"
