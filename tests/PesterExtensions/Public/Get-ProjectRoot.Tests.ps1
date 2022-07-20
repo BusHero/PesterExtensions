@@ -29,23 +29,6 @@ Describe 'Get project root' {
 	}
 }
 
-Describe 'Fail' {
-	Context 'Fail invalid path' {
-		BeforeAll {
-			$NonExistingFile = "${TestDrive}\projects\this\path\does\not\exists"
-			
-			# Ensure that the file does not exist
-			Remove-Item -Path $NonExistingFile `
-				-Force `
-				-Recurse `
-				-ErrorAction Ignore
-		}
-		It 'Fail' {
-			{ Get-ProjectRoot -Path $NonExistingFile } | Should -Throw -Because "'${NonExistingFile}' does not exist"
-		}
-	}
-}
-
 Describe 'Specify projects root name' {
 	BeforeDiscovery {
 
@@ -68,6 +51,52 @@ Describe 'Specify projects root name' {
 		}
 		AfterAll {
 			Remove-Item -Path $path `
+				-Force `
+				-Recurse `
+				-ErrorAction Ignore
+		}
+	}
+}
+
+Describe 'Fail' {
+	Context 'invalid path' {
+		BeforeAll {
+			$NonExistingFile = "${TestDrive}\projects\this\path\does\not\exists"
+			
+			# Ensure that the file does not exist
+			Remove-Item -Path $NonExistingFile `
+				-Force `
+				-Recurse `
+				-ErrorAction Ignore
+		}
+		It 'Fail' {
+			{ Get-ProjectRoot -Path $NonExistingFile } | Should -Throw -Because "'${NonExistingFile}' does not exist"
+		}
+	}
+
+	Context 'No root folder was found' -ForEach @(
+		@{Parameters = @{ Path = '\foo\bar\baz' } }
+		@{Parameters = @{ Path = '\projects\bar\baz'; ProjectsRoot = 'foo' } }
+	) {
+		BeforeAll {
+			$Parameters.Path = "${TestDrive}$($Parameters.Path)"
+
+			# Ensure new folder
+			Remove-Item -Path $Parameters.Path `
+				-Force `
+				-Recurse `
+				-ErrorAction Ignore
+
+			New-Item -Path $Parameters.Path -Force
+		}
+
+		It 'Throw' {
+			{ Get-ProjectRoot @Parameters } | Should -Throw -ExpectedMessage 'The project root could not be identified'
+		}
+
+		AfterAll {
+			Remove-Item `
+				-Path $Parameters.Path `
 				-Force `
 				-Recurse `
 				-ErrorAction Ignore

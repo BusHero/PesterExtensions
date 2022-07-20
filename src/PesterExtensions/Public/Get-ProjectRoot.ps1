@@ -3,7 +3,7 @@
 function Get-ProjectRoot {
 	[CmdletBinding()]
 	param (
-		[ValidateScript({Test-Path $_})]
+		[ValidateScript({ Test-Path $_ })]
 		[Parameter(Mandatory = $true)]
 		[string]
 		$Path,
@@ -18,6 +18,7 @@ function Get-ProjectRoot {
 			return Join-Segments -Segments $segments[0..($i + 1)]
 		}
 	}
+	throw 'The project root could not be identified'
 	<#
 		.PARAMETER Path
 		Some documentation here and there
