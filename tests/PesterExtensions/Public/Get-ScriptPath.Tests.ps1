@@ -1,8 +1,8 @@
 BeforeAll {
-	. $PSCommandPath.Replace('.Tests.ps1', '.ps1').Replace('\tests', '\src')
+	Import-Module -Name PesterExtensions
+	. "$(Get-ScriptPath -Path $PSCommandPath -Extension Script)"
+	Remove-Module -Name PesterExtensions
 }
-
-
 
 Describe 'Extensions' -ForEach @(
 	@{ Path = 'C:\.config\File.Tests.ps1'; Extension = 'Script'; Expected = 'C:\.config\File.ps1' }

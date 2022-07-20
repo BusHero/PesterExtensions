@@ -15,7 +15,10 @@ BeforeDiscovery {
 }
 
 BeforeAll {
-	$ModulePath = $PSCommandPath.Replace('.Tests.ps1', '.psd1').Replace('\tests', '\src')
+	Import-Module -Name PesterExtensions
+	$ModulePath = "$(Get-ScriptPath -Path $PSCommandPath -Extension Manifest)"
+	Remove-Module -Name PesterExtensions
+
 	$script:ModuleInfo = Test-ModuleManifest -Path $ModulePath
 
 	Import-Module $ModulePath
