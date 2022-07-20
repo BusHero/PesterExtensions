@@ -8,16 +8,18 @@ BeforeAll {
 
 Describe 'Parameters' {
 	BeforeAll {
-		$script:Command = Get-Command Get-ScriptPath
+		$script:CommandName = 'Get-ProjectRoot'
+		$script:Command = Get-Command $CommandName
 	}
 	Context 'Parameters' -ForEach @(
 		@{Parameter = 'Path'; Mandatory = $true }
+		@{Parameter = 'ProjectsRoot'; Mandatory = $false }
 	) {
-		It '<parameter>' {
+		It '"<commandname>" should have parameter "<parameter>" ' {
 			$Command | Should -HaveParameter $parameter -Mandatory:$mandatory
 		} 
 		It '<parameter> should be documented' {
-			$help = Get-Help 'Get-ScriptPath' -Parameter $parameter
+			$help = Get-Help $CommandName -Parameter $parameter
 			$help.Description | Should -Not -BeNullOrEmpty -Because "$parameter should have description"
 		}
 	}

@@ -3,15 +3,25 @@
 function Get-ProjectRoot {
 	[CmdletBinding()]
 	param (
-		# Some documentation here and there
-		[Parameter()]
+		[Parameter(Mandatory = $true)]
 		[string]
-		$Path
+		$Path,
+
+		[Parameter(Mandatory = $false)]
+		[string[]]
+		$ProjectsRoot = 'projects'
 	)
 	$segments = Get-Segments -Path $Path
 	for ($i = 0; $i -lt $segments.Count; $i++) {
-		if ($segments[$i] -eq 'projects') {
+		if ($ProjectsRoot -contains $segments[$i]) {
 			return Join-Segments -Segments $segments[0..($i + 1)]
 		}
 	}
+	<#
+		.PARAMETER Path
+		Some documentation here and there
+
+		.PARAMETER ProjectsRoot
+		Some documentation here and there
+	#>
 }
