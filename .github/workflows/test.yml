@@ -19,5 +19,5 @@ jobs:
       - name: Show Tag
         id: display
         run: |
-          tag='${{steps.tagger.outputs.tag}}'.substring(1)
+          $tag = '${{steps.tagger.outputs.tag}}'.substring(1)
           Write-Output "Output from Find Tag: $tag"
