@@ -12,12 +12,8 @@ jobs:
           fetch-depth: 0
       - name: Find Tag
         id: tagger
-        run: |
-          git fetch --prune
-          $foo = git describe --tags --abbrev=0 --match 'v*' --exclude '*-rc*' 'HEAD~'
-          Write-Output "::set-output name=tag::$foo"
+        run: ..\..\Get-GitTag.ps1 -Tag 'tag'
       - name: Show Tag
         id: display
         run: |
-          $tag = '${{steps.tagger.outputs.tag}}'.substring(1)
-          Write-Output "Output from Find Tag: $tag"
+          Write-Output "Output from Find Tag: ${{steps.tagger.outputs.tag}}"
