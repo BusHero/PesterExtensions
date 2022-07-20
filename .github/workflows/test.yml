@@ -5,17 +5,14 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - name: Find Tag
         id: tagger
-        uses: jimschubert/query-tag-action@v1
-        with:
-          include: v*
-          exclude: '*-rc*'
-          commit-ish: 'HEAD~'
+        run: |
+          echo '::set-output name=tag::foo'
       - name: Show Tag
         id: display
         run: |
-          echo "Output from Find Tag: $(${{steps.tagger.outputs.tag}}.Substring(1))"
+          echo "Output from Find Tag: $(${{steps.tagger.outputs.tag}}"
