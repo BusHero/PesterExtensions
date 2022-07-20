@@ -10,6 +10,11 @@ jobs:
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v2
+    - name: Install PesterExtensions
+      shell: Install from PSGallery
+      run: |
+        Set-PSRepository PSGallery -InstallationPolicy Trusted
+        Install-Module PesterExtensions -RequiredVersion 0.4.0.23
     - name: Generate Module manifest file
       run: .\setup.ps1 -Revision ${{ github.run_number }}
     - name: Run tests
