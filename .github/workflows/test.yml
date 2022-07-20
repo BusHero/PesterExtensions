@@ -12,7 +12,7 @@ jobs:
           fetch-depth: 0
       - name: Find Tag
         id: tagger
-        run: ..\..\Get-GitTag.ps1 -Tag 'tag'
+        run: .\Get-GitTag.ps1 -Tag 'tag'
       - name: Show Tag
         id: display
         run: |
