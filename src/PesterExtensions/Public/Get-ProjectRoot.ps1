@@ -1,3 +1,5 @@
+. "${PSScriptRoot}\..\Private\PathUtilities.ps1"
+
 function Get-ProjectRoot {
 	[CmdletBinding()]
 	param (
@@ -6,5 +8,10 @@ function Get-ProjectRoot {
 		[string]
 		$Path
 	)
-	return 'C:\projects\project'
+	$segments = Get-Segments -Path $Path
+	for ($i = 0; $i -lt $segments.Count; $i++) {
+		if ($segments[$i] -eq 'projects') {
+			return Join-Segments -Segments $segments[0..($i + 1)]
+		}
+	}
 }
