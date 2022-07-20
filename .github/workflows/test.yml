@@ -18,4 +18,5 @@ jobs:
       - name: Show Tag
         id: display
         run: |
-          echo "Output from Find Tag: ${'${{steps.tagger.outputs.tag}}':1}"
+          tag='${{steps.tagger.outputs.tag}}'
+          echo "Output from Find Tag: ${tag:1}"
