@@ -14,7 +14,11 @@ function Get-ProjectRoot {
 
 		[Parameter(Mandatory = $false)]
 		[string]
-		$Name
+		$Name,
+
+		[Parameter(Mandatory = $false)]
+		[string[]]
+		$Markers
 	)
 	$segments = Get-Segments -Path $Path
 
@@ -29,6 +33,12 @@ function Get-ProjectRoot {
 		if ($ProjectsRoot -contains $segments[$i]) {
 			return Join-Segments -Segments $segments[0..($i + 1)]
 		}
+		if ($Markers) {
+			$foo = Join-Segments -Segments $segments[0..$i]
+			if (Test-Path -Path "${foo}\${Markers}") {
+				return $foo
+			}
+		}
 	}
 	throw 'The project root could not be identified'
 	<#
@@ -40,5 +50,8 @@ function Get-ProjectRoot {
 
 		.PARAMETER Name
 		Specifies the name of the project folder
+
+		.PARAMETER Markers
+		Supplies a list of folders that the project root my contain
 	#>
 }

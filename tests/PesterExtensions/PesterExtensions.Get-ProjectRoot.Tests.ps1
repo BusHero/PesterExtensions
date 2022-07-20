@@ -15,6 +15,7 @@ Describe 'Parameters' {
 		@{Parameter = 'Path'; Mandatory = $true }
 		@{Parameter = 'ProjectsRoot'; Mandatory = $false }
 		@{Parameter = 'Name'; Mandatory = $false }
+		@{Parameter = 'Markers'; Mandatory = $false }
 	) {
 		It '"<commandname>" should have parameter "<parameter>" ' {
 			$Command | Should -HaveParameter $parameter -Mandatory:$mandatory

@@ -127,3 +127,50 @@ Describe 'Fail' {
 		}
 	}
 }
+
+Describe 'Markers' {
+	BeforeAll {
+		$Root = "${TestDrive}\foo"
+		$ProjectRoot = "${Root}\bar"
+		
+		$Path = "${ProjectRoot}\baz\foobar"
+		$Marker = '.git'
+		$MarkerPath = "${ProjectRoot}\${Marker}"
+
+		Remove-Item `
+			-Path $Root `
+			-Force `
+			-Recurse `
+			-ErrorAction Ignore
+		
+		New-Item `
+			-Path $Path `
+			-ItemType File `
+			-Force
+
+		New-Item `
+			-Path $MarkerPath `
+			-ItemType Directory `
+			-Force
+	}
+
+	It 'Marker path is created' {
+		Test-Path -Path $MarkerPath | Should -BeTrue
+	}
+
+	It 'Project file is created' {
+		Test-Path -Path $Path | Should -BeTrue
+	}
+
+	It 'The right project root is returned' -Tag Foo {
+		Get-ProjectRoot -Path $Path -Markers $Marker | Should -Be $ProjectRoot
+	}
+
+	AfterAll {
+		Remove-Item `
+			-Path $Root `
+			-Recurse `
+			-Force `
+			-ErrorAction Ignore
+	}
+}
