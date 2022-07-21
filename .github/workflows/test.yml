@@ -11,32 +11,32 @@ jobs:
         with:
           fetch-depth: 0
       - name: Find Tag
-        id: tagger
+        id: latest_tag
         run: .\Get-GitTag.ps1 -OutVariable tag
       - name: Check release is present
-        run: gh release view ${{ steps.tagger.outputs.tag }}
+        run: gh release view ${{ steps.latest_tag.outputs.tag }}
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
       - name: Get the previous version of the module
-        id: version
+        id: previous_version
         run: .\Get-ExistingPackageVersion.ps1 -OutVariable version
       - name: Clean up version
-        id: clean_version
+        id: latest_version
         run: |
-          $version = '${{ steps.version.outputs.version }}'.Substring(1)
+          $version = '${{ steps.latest_tag.outputs.tag }}'.Substring(1)
           "::set-output name=version::${Version}"
       - name: Check it's an incremental upgrade
         run: |
           . ".\src\PesterExtensions\Public\Check-SemanticVersion.ps1"
           Check-SemanticVersion `
-            -Current ${{ steps.clean_version.outputs.version }} `
-            -Next ${{ steps.tagger.outputs.tag }} | Should -BeTrue
+            -Current ${{ steps.previous_version.outputs.version }} `
+            -Next ${{ steps.latest_version.outputs.version }} | Should -BeTrue
       - name: Install PesterExtensions
         shell: pwsh
         run: |
           Set-PSRepository PSGallery -InstallationPolicy Trusted
           Install-Module PesterExtensions -RequiredVersion 0.4.0.23
       - name: Generate Module manifest file
-        run: .\setup.ps1 -Version ${{ steps.clean_version.outputs.version }}
+        run: .\setup.ps1 -Version ${{ steps.latest_version.outputs.version }}
       - name: Run tests
-        run: .\tests.ps1 -Version ${{ steps.clean_version.outputs.version }}
+        run: .\tests.ps1 -Version ${{ steps.latest_version.outputs.version }}
