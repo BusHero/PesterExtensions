@@ -56,7 +56,7 @@ Describe 'Returns true' {
 		@{Current = '1.1.1'; Next = '1.2.0' }
 		@{Current = '1.1.1'; Next = '2.0.0' }
 	) {
-		Check-SemanticVersion -Current $Current -Next $Next | Should -BeTrue
+		Test-SemanticVersionUpdate -Current $Current -Next $Next | Should -BeTrue
 	}
 }
 
@@ -1392,6 +1392,6 @@ Describe 'Returns false' {
 		@{ Current = '5.5.5'; Next = '10.10.10' }
 		
 	) {
-		Check-SemanticVersion -Current $Current -Next $Next | Should -BeFalse
+		Test-SemanticVersionUpdate -Current $Current -Next $Next | Should -BeFalse
 	}
 }

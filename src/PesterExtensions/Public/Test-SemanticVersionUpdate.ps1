@@ -1,4 +1,4 @@
-function Check-SemanticVersion {
+function Test-SemanticVersionUpdate {
 	param (
 		[parameter(Mandatory)]
 		[version]

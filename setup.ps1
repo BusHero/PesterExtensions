@@ -14,7 +14,7 @@ New-ModuleManifest `
 	-LicenseUri 'https://github.com/BusHero/pester.extenssions/main/license' `
 	-Tags Pester, Tests `
 	-RootModule 'PesterExtensions.psm1' `
-	-FunctionsToExport 'Get-ScriptPath', 'Get-ProjectRoot' `
+	-FunctionsToExport 'Get-ScriptPath', 'Get-ProjectRoot', 'Test-SemanticVersionUpdate' `
 	-ReleaseNotes $releaseNotes `
 	-HelpInfoUri 'https://raw.githubusercontent.com/BusHero/PesterExtensions/main/help' `
 	-ModuleVersion ${Version}

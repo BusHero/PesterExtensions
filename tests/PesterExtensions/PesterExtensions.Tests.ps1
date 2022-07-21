@@ -6,7 +6,8 @@ param(
 BeforeDiscovery {
 	$CommandNames = @(
 		'Get-ScriptPath',
-		'Get-ProjectRoot'
+		'Get-ProjectRoot',
+		'Test-SemanticVersionUpdate'
 	) | Sort-Object
 	$script:Commands = foreach ($command in $CommandNames) { @{ Command = $command } } 
 	$script:Stupid = @( @{CommandNames = $CommandNames } )
