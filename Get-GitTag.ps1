@@ -1,8 +1,8 @@
 param (
 	[string]
-	$Tag
+	$OutVariable
 )
 
 git fetch --prune
-$foo = git describe --tags --abbrev=0 --match 'v*' --exclude '*-rc*'
-return "::set-output name=$Tag::$foo"
+$tag = git describe --tags --abbrev=0 --match 'v*' --exclude '*-rc*'
+return "::set-output name=${OutVariable}::${tag}"
