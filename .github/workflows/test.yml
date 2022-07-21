@@ -10,9 +10,11 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - name: Find Tag
-        id: tagger
-        run: .\Get-GitTag.ps1 -Tag 'tag'
-      - name: Show Tag
-        run: |
-          Write-Output "Output from Find Tag: ${{steps.tagger.outputs.tag}}"
+      - name: Is Github CLI available?
+        run: gh -h
+      # - name: Find Tag
+      #   id: tagger
+      #   run: .\Get-GitTag.ps1 -Tag 'tag'
+      # - name: Show Tag
+      #   run: |
+      #     Write-Output "Output from Find Tag: ${{steps.tagger.outputs.tag}}"
