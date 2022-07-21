@@ -6,6 +6,7 @@ on:
 jobs:
   build:
     runs-on: windows-latest
+    environment: production
     steps:
       - uses: actions/checkout@v3
         with:
@@ -40,3 +41,4 @@ jobs:
         run: .\setup.ps1 -Version ${{ steps.latest_version.outputs.version }}
       - name: Run tests
         run: .\tests.ps1 -Version ${{ steps.latest_version.outputs.version }}
+
