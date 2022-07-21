@@ -41,7 +41,7 @@ jobs:
         shell: pwsh
         run: |
           Set-PSRepository PSGallery -InstallationPolicy Trusted
-          Install-Module PesterExtensions -RequiredVersion 0.4.0.23
+          Install-Module PesterExtensions -RequiredVersion 0.6.0
       - name: Generate Module manifest file
         run: .\setup.ps1 -Version ${{ steps.latest_version.outputs.version }}
       - name: Run tests
