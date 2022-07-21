@@ -14,4 +14,5 @@ jobs:
         id: tagger
         run: .\Get-GitTag.ps1 -Tag 'tag'
       - name: Show Tag
-        run: Write-Output "Output from Find Tag: ${{steps.tagger.outputs.tag}}"
+        run: |
+          Write-Output "Output from Find Tag: ${{steps.tagger.outputs.tag}}"
