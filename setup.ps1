@@ -1,9 +1,8 @@
 param(
-	[int]$Revision = 0
+	[version]$Version
 )
 
 $GUID = 'ca565820-19b6-4420-b671-bbd6268b866c'
-$Version = '0.5.0'
 $releaseNotes = "$(Get-Content -Path '.\releaseNotes\release.md')"
 
 New-ModuleManifest `
@@ -18,4 +17,4 @@ New-ModuleManifest `
 	-FunctionsToExport 'Get-ScriptPath', 'Get-ProjectRoot' `
 	-ReleaseNotes $releaseNotes `
 	-HelpInfoUri 'https://raw.githubusercontent.com/BusHero/PesterExtensions/main/help' `
-	-ModuleVersion "${Version}.${Revision}"
+	-ModuleVersion ${Version}

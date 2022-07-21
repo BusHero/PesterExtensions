@@ -1,7 +1,5 @@
 param(
-	[parameter(Mandatory)]
-	[int]
-	$Revision
+	[version]$Version
 )
 
 
@@ -51,17 +49,8 @@ Describe 'All the important fields are not empty' {
 }
 
 Describe 'Validate the version' {
-	It 'Major should be 0' {
-		$ModuleInfo.Version.Major | Should -Be 0
-	}
-	It 'Minor should be 5' {
-		$ModuleInfo.Version.Minor | Should -Be 5
-	}
-	It 'Build should be 0' {
-		$ModuleInfo.Version.Build | Should -Be 0
-	}
-	It 'Revision should be <revision>' {
-		$ModuleInfo.Version.Revision | Should -Be $revision
+	It 'Module should have the right version' {
+		$ModuleInfo.Version | Should -Be $Version
 	}
 }
 

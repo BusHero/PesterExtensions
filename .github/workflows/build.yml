@@ -21,3 +21,4 @@ jobs:
       run: .\setup.ps1 -Revision ${{ github.run_number }}
     - name: Run tests
       run: .\tests.ps1 -RunNumber ${{ github.run_number }}
+      
