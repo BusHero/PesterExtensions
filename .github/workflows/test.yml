@@ -21,13 +21,7 @@ jobs:
         id: version
         run: .\Get-ExistingPackageVersion.ps1 -OutVariable version
       - name: Check it's an incremental upgrade
-        run: |
-          . .\src\PesterExtensions\Public\Check-SemanticVersion.ps1
-          $current = '${{ steps.version.outputs.version }}'
-          $next = '${{ steps.tagger.outputs.tag }}'.Substring(1)
-          Check-SemanticVersion `
-            -Current $current `
-            -Next $next | Should -BeTrue
+        run: .\Check-IncrementalUpdate.ps1 -current '${{ steps.version.outputs.version }}' -next '${{ steps.tagger.outputs.tag }}'
       # - name: Show Tag
       #   run: |
       #     Write-Output "Output from Find Tag: ${{steps.tagger.outputs.tag}}"
