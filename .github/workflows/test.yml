@@ -23,8 +23,8 @@ jobs:
       - name: Check it's an incremental upgrade
         run: |
           . .\src\PesterExtensions\Public\Check-SemanticVersion.ps1
-          $current = '${{ steps.version.outputs.version }}'.Substring(1)
-          $next = '${{ steps.tagger.outputs.tag }}'
+          $current = '${{ steps.version.outputs.version }}'
+          $next = '${{ steps.tagger.outputs.tag }}'.Substring(1)
           Check-SemanticVersion `
             -Current $current `
             -Next $next | Should -BeTrue
