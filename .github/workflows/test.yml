@@ -27,7 +27,7 @@ jobs:
           "::set-output name=version::${Version}"
       - name: Check it's an incremental upgrade
         run: |
-          . "${PSScriptRoot}\src\PesterExtensions\Public\Check-SemanticVersion.ps1"
+          . ".\src\PesterExtensions\Public\Check-SemanticVersion.ps1"
           Check-SemanticVersion `
             -Current ${{ steps.clean_version.outputs.version }} `
             -Next ${{ steps.tagger.outputs.tag }} | Should -BeTrue
