@@ -33,8 +33,8 @@ jobs:
           "::set-output name=version::${Version}"
       - name: Check it's an incremental upgrade
         run: |
-          . ".\src\PesterExtensions\Public\Check-SemanticVersion.ps1"
-          Check-SemanticVersion `
+          . ".\src\PesterExtensions\Public\Test-SemanticVersionUpdate.ps1"
+          Test-SemanticVersionUpdate `
             -Current ${{ steps.previous_version.outputs.version }} `
             -Next ${{ steps.latest_version.outputs.version }} | Should -BeTrue
       - name: Install PesterExtensions
