@@ -2,17 +2,6 @@ param(
 	[version]$Version
 )
 
-
-BeforeDiscovery {
-	$CommandNames = @(
-		'Get-ScriptPath',
-		'Get-ProjectRoot',
-		'Test-SemanticVersionUpdate'
-	) | Sort-Object
-	$script:Commands = foreach ($command in $CommandNames) { @{ Command = $command } } 
-	$script:Stupid = @( @{CommandNames = $CommandNames } )
-}
-
 BeforeAll {
 	Import-Module -Name PesterExtensions
 	$ModulePath = "$(Get-ScriptPath -Path $PSCommandPath -Extension Manifest)"
@@ -25,8 +14,6 @@ BeforeAll {
 }
 
 Describe 'All the important fields are not empty' {
-	BeforeAll {
-	}
 	It '<property> should not be null' -TestCases @(
 		@{ Property = 'Path' }
 		@{ Property = 'Description' }
@@ -55,17 +42,56 @@ Describe 'Validate the version' {
 	}
 }
 
-Describe 'Exported functions' {
-	Context 'stupid' -ForEach $stupid {
-		It 'Module manifest contains all the exported commands' {
-			$ModuleInfo.ExportedCommands.Keys | Sort-Object | Should -Be $CommandNames
-		}
-		It 'Imported Module contains all the exported commands' {
-			$ImportedModule.ExportedCommands.Keys | Sort-Object | Should -Be $CommandNames
-		}
+Describe 'Check functions' -ForEach @(
+	@{ 
+		CommandName = 'Get-ScriptPath';
+		Verb        = 'Get';
+		Noun        = 'ScriptPath'; 
+		Parameters  = @(
+			@{Parameter = 'Path'; Mandatory = $true }
+			@{Parameter = 'Extension'; Mandatory = $false }
+			@{Parameter = 'SourceDirectory'; Mandatory = $false }
+			@{Parameter = 'TestsDirectory'; Mandatory = $false }
+		)
 	}
-	It '<command> is exported' -TestCases $Commands {
-		Get-Command -Name $command -ErrorAction Ignore | Should -Not -Be $null -Because "$command function should be exporeted"
+	@{ 
+		CommandName = 'Get-ProjectRoot';
+		Verb        = 'Get';
+		Noun        = 'ProjectRoot';
+		Parameters  = @(
+			@{Parameter = 'Path'; Mandatory = $true }
+			@{Parameter = 'ProjectsRoot'; Mandatory = $false }
+			@{Parameter = 'Name'; Mandatory = $false }
+			@{Parameter = 'Markers'; Mandatory = $false }
+		)
+	}
+	@{
+		CommandName = 'Test-SemanticVersionUpdate';
+		Verb        = 'Test';
+		Noun        = 'SemanticVersionUpdate';
+		Parameters  = @(
+			@{Parameter = 'Current'; Mandatory = $true }
+			@{Parameter = 'Next'; Mandatory = $true }
+		)
+	}
+) {
+	BeforeAll {
+		$script:Command = Get-Command $CommandName
+	}
+	It 'Module manifest contains <commandName>' {
+		$ModuleInfo.ExportedCommands.Keys | Should -Contain $CommandName
+	}
+	It 'Imported Module contains <commandName>' {
+		$ImportedModule.ExportedCommands.Keys | Should -Contain $CommandName
+	}
+	Describe '<parameter>' -ForEach $Parameters {
+		It '<CommandName> contains <parameter>' {
+			$command | Should -HaveParameter $parameter -Mandatory:$mandatory
+		}
+		It '<parameter> should be documented' {
+			$help = Get-Help $CommandName -Parameter $parameter
+			$help.Description | Should -Not -BeNullOrEmpty -Because "$parameter should have description"
+		}
 	}
 }
 

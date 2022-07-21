@@ -18,4 +18,12 @@ function Test-SemanticVersionUpdate {
 		[version]"$(${major} + 1).0.0"
 	)
 	return $ValidVersions -contains $Next
+
+	<#
+		.PARAMETER current
+		Some documentation here and there
+
+		.PARAMETER Next
+		Some documentation here and there
+	#>
 }
