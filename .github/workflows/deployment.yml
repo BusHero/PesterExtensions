@@ -3,6 +3,11 @@ name: deployment
 on:
   workflow_dispatch:
 
+env:
+  MODULE_PATH: .\src\PesterExtensions
+  DOTNET_CLI_TELEMETRY_OPTOUT: true 
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+
 jobs:
   build:
     runs-on: windows-latest
