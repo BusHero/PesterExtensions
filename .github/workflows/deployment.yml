@@ -9,7 +9,7 @@ env:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
 
 jobs:
-  build:
+  deploy:
     runs-on: windows-latest
     environment: production
     steps:
