@@ -18,7 +18,7 @@ jobs:
         Set-PSRepository PSGallery -InstallationPolicy Trusted
         Install-Module PesterExtensions -RequiredVersion 0.4.0.23
     - name: Generate Module manifest file
-      run: .\setup.ps1 -Revision ${{ github.run_number }}
+      run: .\setup.ps1 -Version 0.1.0
     - name: Run tests
-      run: .\tests.ps1 -RunNumber ${{ github.run_number }}
+      run: .\tests.ps1 -Version 0.1.0
       
