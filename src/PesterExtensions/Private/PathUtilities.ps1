@@ -27,17 +27,3 @@ function Get-SanitizeSegment {
 	return $segment -replace '/|\\'
 }
 
-function script:Format-Parent {
-	param (
-		[parameter(ValueFromPipeline)][string]$Parent,
-		[string]$SourceDirectory,
-		[string]$TestsDirectory
-	)
-	$segments = Get-Segments -Path $Parent
-	$index = $segments.IndexOf($TestsDirectory)
-	if ($index -ne -1) {
-		$segments[$index] = $SourceDirectory
-	}
-	$Parent = Join-Segments -segments $segments
-	return $Parent
-}
