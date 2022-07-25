@@ -45,33 +45,35 @@ Describe 'Validate the version' {
 Describe 'Check functions' -ForEach @(
 	@{ 
 		CommandName = 'Get-ScriptPath';
-		Verb        = 'Get';
-		Noun        = 'ScriptPath'; 
 		Parameters  = @(
-			@{Parameter = 'Path'; Mandatory = $true }
-			@{Parameter = 'Extension'; Mandatory = $false }
-			@{Parameter = 'SourceDirectory'; Mandatory = $false }
-			@{Parameter = 'TestsDirectory'; Mandatory = $false }
+			@{ Parameter = 'Path'; Mandatory = $true }
+			@{ Parameter = 'Extension'; Mandatory = $false }
+			@{ Parameter = 'SourceDirectory'; Mandatory = $false }
+			@{ Parameter = 'TestsDirectory'; Mandatory = $false }
 		)
 	}
 	@{ 
 		CommandName = 'Get-ProjectRoot';
-		Verb        = 'Get';
-		Noun        = 'ProjectRoot';
 		Parameters  = @(
-			@{Parameter = 'Path'; Mandatory = $true }
-			@{Parameter = 'ProjectsRoot'; Mandatory = $false }
-			@{Parameter = 'Name'; Mandatory = $false }
-			@{Parameter = 'Markers'; Mandatory = $false }
+			@{ Parameter = 'Path'; Mandatory = $true }
+			@{ Parameter = 'ProjectsRoot'; Mandatory = $false }
+			@{ Parameter = 'Name'; Mandatory = $false }
+			@{ Parameter = 'Markers'; Mandatory = $false }
 		)
 	}
 	@{
 		CommandName = 'Test-SemanticVersionUpdate';
-		Verb        = 'Test';
-		Noun        = 'SemanticVersionUpdate';
 		Parameters  = @(
-			@{Parameter = 'Current'; Mandatory = $true }
-			@{Parameter = 'Next'; Mandatory = $true }
+			@{ Parameter = 'Current'; Mandatory = $true }
+			@{ Parameter = 'Next'; Mandatory = $true }
+		)
+	}
+	@{
+		CommandName = 'Mock-EnvironmentVariable';
+		Parameters  = @(
+			@{ Parameter = 'Variable'; Mandatory = $true }
+			@{ Parameter = 'Value'; Mandatory = $false }
+			@{ Parameter = 'Fixture'; Mandatory = $true }
 		)
 	}
 ) {
