@@ -52,4 +52,55 @@ Describe 'Mock an environment variable' {
 				-ErrorAction Ignore
 		}
 	}
+
+	Describe 'Initial value should be reasigned' {
+		BeforeAll {
+			$script:environmentVariableName = "test$(New-Guid)"
+			$script:environmentVariable = "env:${environmentVariableName}"
+			$script:InitialValue = 'Some value here and there'
+			$script:UpdatedValue = 'Some updated value'
+			$script:Message = 'Some message here and there'
+			New-Item -Path $environmentVariable -Value $InitialValue
+		}
+		It 'Throw' {
+			{ Mock-EnvironmentVariable `
+					-Variable $environmentVariableName `
+					-Value $UpdatedValue { throw $Message } 
+			} | Should -Throw -ExpectedMessage $Message
+			(Get-ChildItem -Path $environmentVariable).Value | Should -Be $InitialValue
+		}
+
+		AfterAll {
+			Remove-Item `
+				-Path $environmentVariable `
+				-Force `
+				-Recurse `
+				-ErrorAction Ignore
+		}
+	}
+
+	Describe 'Created variable should be destroyed' {
+		BeforeAll {
+			$script:environmentVariableName = "test$(New-Guid)"
+			$script:environmentVariable = "env:${environmentVariableName}"
+			$script:InitialValue = 'Some value here and there'
+			$script:UpdatedValue = 'Some updated value'
+			$script:Message = 'Some message here and there'
+		}
+		It 'Throw' {
+			{ Mock-EnvironmentVariable `
+					-Variable $environmentVariableName `
+					-Value $UpdatedValue { throw $Message } 
+			} | Should -Throw -ExpectedMessage $Message
+			Test-Path -Path $environmentVariable | Should -BeFalse 
+		}
+
+		AfterAll {
+			Remove-Item `
+				-Path $environmentVariable `
+				-Force `
+				-Recurse `
+				-ErrorAction Ignore
+		}
+	}
 }

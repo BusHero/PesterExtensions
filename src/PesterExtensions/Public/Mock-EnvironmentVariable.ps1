@@ -19,13 +19,19 @@ function Mock-EnvironmentVariable {
 	else {
 		New-Item -Path "env:${Variable}" -Value $Value
 	}
-	Invoke-Command -ScriptBlock $Fixture
-
-	if ($OriginalValue) {
-		Set-Item -Path "env:${Variable}" -Value $OriginalValue
+	try {
+		Invoke-Command -ScriptBlock $Fixture
 	}
-	else {
-		Remove-Item -Path "env:${Variable}"
+	catch {
+		throw $_
+	}
+	finally {
+		if ($OriginalValue) {
+			Set-Item -Path "env:${Variable}" -Value $OriginalValue
+		}
+		else {
+			Remove-Item -Path "env:${Variable}"
+		}
 	}
 
 	<#
