@@ -74,7 +74,47 @@ Describe 'Mock an environment variable' {
 				-Recurse `
 				-ErrorAction Ignore
 		}
+	}
 
+	Describe 'Use the original value if value is not set up' {
+		BeforeAll {
+			$script:environmentVariableName = "test$(New-Guid)"
+			$script:environmentVariable = "env:${environmentVariableName}"
+			$script:InitialValue = 'Some value here and there'
+			New-Item -Path $environmentVariable -Value $InitialValue
+		}
+		It 'Test' {
+			Mock-EnvironmentVariable -Variable $environmentVariableName {
+				(Get-ChildItem -Path $environmentVariable).Value | Should -Be $InitialValue
+			}
+		}
+		AfterAll {
+			Remove-Item `
+				-Path $environmentVariable `
+				-Force `
+				-Recurse `
+				-ErrorAction Ignore
+		}
+	}
+
+	Describe 'Do not create the variable if no value is specified' {
+		BeforeAll {
+			$script:environmentVariableName = "test$(New-Guid)"
+			$script:environmentVariable = "env:${environmentVariableName}"
+			$script:InitialValue = 'Some value here and there'
+		}
+		It 'Test' {
+			Mock-EnvironmentVariable -Variable $environmentVariableName {
+				Test-Path -Path $environmentVariable | Should -BeFalse
+			}
+		}
+		AfterAll {
+			Remove-Item `
+				-Path $environmentVariable `
+				-Force `
+				-Recurse `
+				-ErrorAction Ignore
+		}
 	}
 
 	Describe 'Initial value should be reasigned' {

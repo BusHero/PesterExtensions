@@ -14,7 +14,9 @@ function Mock-EnvironmentVariable {
 	)
 	if (Test-Path -Path "env:${Variable}") {
 		$OriginalValue = (Get-ChildItem -Path "env:${Variable}").Value
-		Set-Item -Path "env:${Variable}" -Value $Value
+		if ($value) {
+			Set-Item -Path "env:${Variable}" -Value $Value
+		}
 	}
 	else {
 		New-Item -Path "env:${Variable}" -Value $Value
@@ -29,8 +31,12 @@ function Mock-EnvironmentVariable {
 		if ($OriginalValue) {
 			Set-Item -Path "env:${Variable}" -Value $OriginalValue
 		}
-		else {
-			Remove-Item -Path "env:${Variable}"
+		elseif (Test-Path -Path "env:${Variable}") {
+			Remove-Item `
+				-Path "env:${Variable}" `
+				-Recurse `
+				-Force `
+				-ErrorAction Stop
 		}
 	}
 
