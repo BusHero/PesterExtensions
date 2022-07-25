@@ -25,29 +25,31 @@ Describe 'Mock an environment variable' {
 		$InitialValue = 'Some value here and there'
 		Test-Path -Path $environmentVariable | Should -BeFalse 
 		Mock-EnvironmentVariable -Variable $environmentVariable -Value $InitialValue {
-			$foo = Get-ChildItem -Path "env:${environmentVariable}"
-			$foo.Value | Should -Be $InitialValue
+			(Get-ChildItem -Path "env:${environmentVariable}").Value | Should -Be $InitialValue
 		}
 		Test-Path -Path $environmentVariable | Should -BeFalse 
 	}
 
-	Describe 'asd' {
+	Describe 'Environment variable is set' {
 		BeforeAll {
-			$environmentVariable = "test$(New-Guid)"
-			$InitialValue = 'Some value here and there'
-			$UpdatedValue = 'Some updated value'
-			New-Item -Path "env:${environmentVariable}" -Value $InitialValue
+			$script:environmentVariableName = "test$(New-Guid)"
+			$script:environmentVariable = "env:${environmentVariableName}"
+			$script:InitialValue = 'Some value here and there'
+			$script:UpdatedValue = 'Some updated value'
+			New-Item -Path $environmentVariable -Value $InitialValue
 		}
 		It 'Environment variable is set up' {
-			Mock-EnvironmentVariable -Variable $environmentVariable -Value $UpdatedValue {
-				$foo = Get-ChildItem -Path "env:${environmentVariable}"
-				$foo.Value | Should -Be $UpdatedValue
+			Mock-EnvironmentVariable -Variable $environmentVariableName -Value $UpdatedValue {
+				(Get-ChildItem -Path $environmentVariable).Value | Should -Be $UpdatedValue
 			}
-			$bar = Get-ChildItem -Path "env:${environmentVariable}"
-			$bar.Value | Should -Be $InitialValue
+			(Get-ChildItem -Path $environmentVariable).Value | Should -Be $InitialValue
 		}
 		AfterAll {
-			Remove-Item -Path "env:${environmentVariable}" -Force -Recurse -ErrorAction Ignore
+			Remove-Item `
+				-Path $environmentVariable `
+				-Force `
+				-Recurse `
+				-ErrorAction Ignore
 		}
 	}
 }

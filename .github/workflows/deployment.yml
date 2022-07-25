@@ -24,7 +24,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
       - name: Get the previous version of the module
-        id: previous_version
+        id: previous_versionset
         run: .\Get-ExistingPackageVersion.ps1 -OutVariable version
       - name: Clean up version
         id: latest_version
