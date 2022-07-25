@@ -5,31 +5,51 @@ BeforeAll {
 }
 
 Describe 'Mock an environment variable' {
-	BeforeAll {
-		$script:environmentVariable = "test$(New-Guid)"
-		$script:InitialValue = 'Some value here and there'
-
-	}
-	It 'Code is called' {
-		$script:environmentVariable = "test$(New-Guid)"
-		$script:InitialValue = 'Some value here and there'
-		$script:called = $false
-		Mock-EnvironmentVariable -Variable $environmentVariable -Value $InitialValue {
-			$script:called = $true
+	Describe 'Code is called' {
+		BeforeAll {
+			$script:EnvironmentVariableName = "test$(New-Guid)"
+			$script:EnvironmentVariable = "env:${environmentVariableName}"
+			$script:InitialValue = 'Some value here and there'
 		}
-		$script:called | Should -BeTrue
-	}
-
-	It 'Environment variable is set up' {
-		$environmentVariable = "test$(New-Guid)"
-		$InitialValue = 'Some value here and there'
-		Test-Path -Path $environmentVariable | Should -BeFalse 
-		Mock-EnvironmentVariable -Variable $environmentVariable -Value $InitialValue {
-			(Get-ChildItem -Path "env:${environmentVariable}").Value | Should -Be $InitialValue
+	
+		It 'Code is called' {
+			$script:InitialValue = 'Some value here and there'
+			$script:called = $false
+			Mock-EnvironmentVariable -Variable $environmentVariableName -Value $InitialValue {
+				$script:called = $true
+			}
+			$script:called | Should -BeTrue
 		}
-		Test-Path -Path $environmentVariable | Should -BeFalse 
-	}
 
+		AfterAll {
+			Remove-Item `
+				-Path $EnvironmentVariable `
+				-Recurse `
+				-Force `
+				-ErrorAction Ignore
+		}
+	}
+	Describe 'Environment variable is set up' {
+		BeforeAll {
+			$script:environmentVariable = "test$(New-Guid)"
+			$script:InitialValue = 'Some value here and there'
+		}
+	
+		It 'Environment variable is set up' {
+			$environmentVariable = "test$(New-Guid)"
+			$InitialValue = 'Some value here and there'
+			Test-Path -Path $environmentVariable | Should -BeFalse 
+			Mock-EnvironmentVariable -Variable $environmentVariable -Value $InitialValue {
+				(Get-ChildItem -Path "env:${environmentVariable}").Value | Should -Be $InitialValue
+			}
+			Test-Path -Path $environmentVariable | Should -BeFalse 
+		}
+
+		AfterAll {
+
+		}
+	}
+		
 	Describe 'Environment variable is set' {
 		BeforeAll {
 			$script:environmentVariableName = "test$(New-Guid)"
@@ -164,6 +184,29 @@ Describe 'Mock an environment variable' {
 				-Path $environmentVariable `
 				-Force `
 				-Recurse `
+				-ErrorAction Ignore
+		}
+	}
+
+	Describe 'Set up environment variable is cleared up' {
+		BeforeAll {
+			$environmentVariableName = "test$(New-Guid)"
+			$script:environmentVariable = "env:${environmentVariableName}"
+		}
+
+		It 'Set up environment variable is cleared up' {
+			Mock-EnvironmentVariable `
+				-Variable $environmentVariableName { 
+				New-Item -Path $environmentVariable -Value 'Some value'
+			} 
+			Test-Path -Path $environmentVariable | Should -BeFalse 
+		}
+
+		AfterAll {
+			Remove-Item `
+				-Path $environmentVariable `
+				-Recurse `
+				-Force `
 				-ErrorAction Ignore
 		}
 	}
