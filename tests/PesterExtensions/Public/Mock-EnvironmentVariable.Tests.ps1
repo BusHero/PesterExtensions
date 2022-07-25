@@ -53,6 +53,30 @@ Describe 'Mock an environment variable' {
 		}
 	}
 
+	Describe 'Restore variable that got destroyed' {
+		BeforeAll {
+			$script:environmentVariableName = "test$(New-Guid)"
+			$script:environmentVariable = "env:${environmentVariableName}"
+			$script:InitialValue = 'Some value here and there'
+			$script:UpdatedValue = 'Some updated value'
+			New-Item -Path $environmentVariable -Value $InitialValue
+			Mock-EnvironmentVariable -Variable $environmentVariableName -Value $UpdatedValue {
+				Remove-Item -Path $environmentVariable -Recurse -Force -ErrorAction Ignore
+			}
+		}
+		It 'Environment variable is set up' {
+			(Get-ChildItem -Path $environmentVariable).Value | Should -Be $InitialValue
+		}
+		AfterAll {
+			Remove-Item `
+				-Path $environmentVariable `
+				-Force `
+				-Recurse `
+				-ErrorAction Ignore
+		}
+
+	}
+
 	Describe 'Initial value should be reasigned' {
 		BeforeAll {
 			$script:environmentVariableName = "test$(New-Guid)"
