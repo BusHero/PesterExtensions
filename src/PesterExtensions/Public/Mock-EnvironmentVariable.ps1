@@ -12,28 +12,31 @@ function Mock-EnvironmentVariable {
 		[ScriptBlock]
 		$Fixture
 	)
-	if (Test-Path -Path "env:${Variable}") {
-		$OriginalValue = (Get-ChildItem -Path "env:${Variable}").Value
+	$EnvironmentVariable = "env:${Variable}"
+	if (Test-Path -Path $EnvironmentVariable) {
+		$OriginalValue = (Get-ChildItem -Path $EnvironmentVariable).Value
 		if ($value) {
-			Set-Item -Path "env:${Variable}" -Value $Value
+			Set-Item -Path $EnvironmentVariable -Value $Value
 		}
 	}
 	else {
-		New-Item -Path "env:${Variable}" -Value $Value
+		New-Item -Path $EnvironmentVariable -Value $Value
 	}
 	try {
 		Invoke-Command -ScriptBlock $Fixture
 	}
+
 	catch {
 		throw $_
 	}
+	
 	finally {
 		if ($OriginalValue) {
-			Set-Item -Path "env:${Variable}" -Value $OriginalValue
+			Set-Item -Path $EnvironmentVariable -Value $OriginalValue
 		}
-		elseif (Test-Path -Path "env:${Variable}") {
+		elseif (Test-Path -Path $EnvironmentVariable) {
 			Remove-Item `
-				-Path "env:${Variable}" `
+				-Path $EnvironmentVariable `
 				-Recurse `
 				-Force `
 				-ErrorAction Stop

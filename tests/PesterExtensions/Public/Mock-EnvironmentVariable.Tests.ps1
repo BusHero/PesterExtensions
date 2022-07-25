@@ -31,22 +31,25 @@ Describe 'Mock an environment variable' {
 	}
 	Describe 'Environment variable is set up' {
 		BeforeAll {
-			$script:environmentVariable = "test$(New-Guid)"
-			$script:InitialValue = 'Some value here and there'
+			$environmentVariableName = "test$(New-Guid)"
+			$environmentVariable = "env:${environmentVariableName}"
+			$InitialValue = 'Some value here and there'
 		}
 	
 		It 'Environment variable is set up' {
-			$environmentVariable = "test$(New-Guid)"
-			$InitialValue = 'Some value here and there'
 			Test-Path -Path $environmentVariable | Should -BeFalse 
 			Mock-EnvironmentVariable -Variable $environmentVariable -Value $InitialValue {
-				(Get-ChildItem -Path "env:${environmentVariable}").Value | Should -Be $InitialValue
+				(Get-ChildItem -Path $environmentVariable).Value | Should -Be $InitialValue
 			}
 			Test-Path -Path $environmentVariable | Should -BeFalse 
 		}
 
 		AfterAll {
-
+			Remove-Item `
+				-Path $environmentVariable `
+				-Recurse `
+				-Force `
+				-ErrorAction Ignore
 		}
 	}
 		
