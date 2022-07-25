@@ -20,7 +20,7 @@ function Mock-EnvironmentVariable {
 		}
 	}
 	else {
-		New-Item -Path $EnvironmentVariable -Value $Value
+		New-Item -Path $EnvironmentVariable -Value $Value | Out-Null
 	}
 	try {
 		Invoke-Command -ScriptBlock $Fixture
@@ -29,7 +29,7 @@ function Mock-EnvironmentVariable {
 	catch {
 		throw $_
 	}
-	
+
 	finally {
 		if ($OriginalValue) {
 			Set-Item -Path $EnvironmentVariable -Value $OriginalValue
