@@ -73,6 +73,7 @@ Describe 'Check functions' -ForEach @(
 		Parameters  = @(
 			@{ Parameter = 'Variable'; Mandatory = $true }
 			@{ Parameter = 'Value'; Mandatory = $false }
+			@{ Parameter = 'Target'; Mandatory = $false }
 			@{ Parameter = 'Fixture'; Mandatory = $true }
 		)
 	}

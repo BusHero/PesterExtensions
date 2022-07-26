@@ -8,11 +8,17 @@ function Mock-EnvironmentVariable {
 		[string]
 		$Value,
 
+		[Parameter(Mandatory = $false)]
+		[System.EnvironmentVariableTarget]
+		$Target = [System.EnvironmentVariableTarget]::Process,
+
 		[Parameter(Mandatory = $true, Position = 1)]
 		[ScriptBlock]
 		$Fixture
+
 	)
 	$EnvironmentVariable = "env:${Variable}"
+
 	if (Test-Path -Path $EnvironmentVariable) {
 		$OriginalValue = (Get-ChildItem -Path $EnvironmentVariable).Value
 		if ($value) {
@@ -52,5 +58,8 @@ function Mock-EnvironmentVariable {
 
 	.PARAMETER Fixture
 	The code to be executed.
+
+	.PARAMETER Target
+	Specifies that user environment variable should also be managed.
 	#>
 }
