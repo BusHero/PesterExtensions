@@ -5,170 +5,142 @@ BeforeAll {
 }
 
 Describe 'Mock an environment variable' {
-	Describe 'Code is called' {
-		BeforeAll {
-			$script:EnvironmentVariableName = "test$(New-Guid)"
-			$script:InitialValue = 'Some value here and there'
-		}
+	BeforeAll {
+		$EnvironmentVariableName = "test$(New-Guid)"
+		$InitialValue = 'Some value here and there'
+	}
 	
-		It 'Code is called' {
-			$script:called = $false
-			Mock-EnvironmentVariable -Variable $environmentVariableName -Value $InitialValue {
-				$script:called = $true
-			}
-			$script:called | Should -BeTrue
+	It 'Code is called' {
+		$script:called = $false
+		Mock-EnvironmentVariable -Variable $environmentVariableName -Value $InitialValue {
+			$script:called = $true
 		}
-
-		AfterAll {
-			[Environment]::SetEnvironmentVariable($EnvironmentVariableName, $null)
-		}
+		$called | Should -BeTrue
 	}
 
-	Describe 'Environment variable is set up' {
-		BeforeAll {
-			$script:environmentVariableName = "test$(New-Guid)"
-			$script:InitialValue = 'Some value here and there'
-		}
-	
-		It 'Environment variable is set up' {
-			[Environment]::GetEnvironmentVariable($EnvironmentVariableName) | Should -Be $null -Because 'environment variable should be reset'
-			Mock-EnvironmentVariable -Variable $environmentVariableName -Value $InitialValue {
-				[Environment]::GetEnvironmentVariable($EnvironmentVariableName) | Should -Be $InitialValue
-			}
-			[Environment]::GetEnvironmentVariable($EnvironmentVariableName) | Should -Be $null -Because 'environment variable should be reset'
-		}
+	AfterAll {
+		[Environment]::SetEnvironmentVariable($EnvironmentVariableName, $null)
+	}
+}
 
-		AfterAll {
-			[Environment]::SetEnvironmentVariable($EnvironmentVariableName, $null)
+Describe 'Check env mocking' -ForEach @(
+	@{ 
+		InitialValue         = 'Initial Value';
+		MockedValue          = 'Mocked Value'; 
+		ValueInsideTheScript = 'Mocked Value';
+		Script               = { }
+	}
+	@{ 
+		InitialValue         = $null; 
+		MockedValue          = 'Mocked Value'; 
+		ValueInsideTheScript = 'Mocked Value';
+		Script               = { }
+	}
+	@{ 
+		InitialValue         = 'Initial Value'; 
+		MockedValue          = $null; 
+		ValueInsideTheScript = 'Initial Value';
+		Script               = { }
+	}
+	@{ 
+		Script = { } 
+	}
+	@{
+		InitialValue         = 'Initial Value';
+		MockedValue          = 'Mocked Value'; 
+		ValueInsideTheScript = 'Mocked Value';
+		Script               = { 
+			[Environment]::SetEnvironmentVariable($args[0], 'Some updated value') 
 		}
 	}
-		
-	Describe 'Environment variable is set' {
-		BeforeAll {
-			$script:environmentVariableName = "test$(New-Guid)"
-			$script:InitialValue = 'Some value here and there'
-			$script:UpdatedValue = 'Some updated value'
-			[Environment]::SetEnvironmentVariable($environmentVariableName, $InitialValue)
-		}
-		It 'Environment variable is set up' {
-			Mock-EnvironmentVariable -Variable $environmentVariableName -Value $UpdatedValue {
-				[Environment]::GetEnvironmentVariable($environmentVariableName) | Should -Be $UpdatedValue
-			}
-			[Environment]::GetEnvironmentVariable($environmentVariableName) | Should -Be $InitialValue
-		}
-		AfterAll {
-			[Environment]::SetEnvironmentVariable($EnvironmentVariableName, $null)
+	@{
+		InitialValue         = 'Initial Value';
+		MockedValue          = $null; 
+		ValueInsideTheScript = 'Initial Value';
+		Script               = { 
+			[Environment]::SetEnvironmentVariable($args[0], 'Some updated value') 
 		}
 	}
-
-	Describe 'Restore variable that got destroyed' {
-		BeforeAll {
-			$script:environmentVariableName = "test$(New-Guid)"
-			$script:InitialValue = 'Some value here and there'
-			$script:UpdatedValue = 'Some updated value'
-			
-			[Environment]::SetEnvironmentVariable($environmentVariableName, $InitialValue)
-			Mock-EnvironmentVariable -Variable $environmentVariableName -Value $UpdatedValue {
-				[Environment]::SetEnvironmentVariable($environmentVariableName, $null)
-			}
-		}
-		It 'Environment variable is set up' {
-			[Environment]::GetEnvironmentVariable($environmentVariableName) | Should -Be $InitialValue
-		}
-		AfterAll {
-			[Environment]::SetEnvironmentVariable($EnvironmentVariableName, $null)
+	@{
+		InitialValue         = $null;
+		MockedValue          = 'Mocked Value'; 
+		ValueInsideTheScript = 'Mocked Value';
+		Script               = { 
+			[Environment]::SetEnvironmentVariable($args[0], 'Some updated value') 
 		}
 	}
-
-	Describe 'Use the original value if value is not set up' {
-		BeforeAll {
-			$script:environmentVariableName = "test$(New-Guid)"
-			$script:environmentVariable = "env:${environmentVariableName}"
-			$script:InitialValue = 'Some value here and there'
-
-			[Environment]::SetEnvironmentVariable($environmentVariableName, $InitialValue)
-		}
-		It 'Test' {
-			Mock-EnvironmentVariable -Variable $environmentVariableName {
-				[Environment]::GetEnvironmentVariable($environmentVariableName) | Should -Be $InitialValue
-			}
-		}
-		AfterAll {
-			[Environment]::SetEnvironmentVariable($EnvironmentVariableName, $null)
+	@{
+		InitialValue         = $null;
+		MockedValue          = $null; 
+		ValueInsideTheScript = $null;
+		Script               = { 
+			[Environment]::SetEnvironmentVariable($args[0], 'Some updated value') 
 		}
 	}
+) {
+	BeforeAll {
+		$environmentVariableName = "test_$(New-Guid)"
+		[Environment]::SetEnvironmentVariable($environmentVariableName, $InitialValue)
+	}
+	It 'Test' {
+		Mock-EnvironmentVariable `
+			-Variable $environmentVariableName `
+			-Value $MockedValue {
+			[Environment]::GetEnvironmentVariable($environmentVariableName) | Should -Be $ValueInsideTheScript
+			Invoke-Command -ScriptBlock $script -ArgumentList $environmentVariableName
+		} 
+		[Environment]::GetEnvironmentVariable($environmentVariableName) | Should -Be $InitialValue
+	}
+	AfterAll {
+		[Environment]::SetEnvironmentVariable($environmentVariableName, $null)
+	}
+}
 
-	Describe 'Do not create the variable if no value is specified' {
-		BeforeAll {
-			$script:environmentVariableName = "test$(New-Guid)"
-		}
-		It 'Test' {
-			Mock-EnvironmentVariable -Variable $environmentVariableName {
-				[Environment]::GetEnvironmentVariable($environmentVariableName) | Should -Be $null
-			}
-		}
-		AfterAll {
-			[Environment]::SetEnvironmentVariable($EnvironmentVariableName, $null)
+Describe 'Should throw' -ForEach @(
+	@{
+		InitialValue = 'Initial Value';
+		MockedValue  = 'Mocked Value'; 
+		Script       = { 
+			throw 'Some exception here and there'
 		}
 	}
-
-	Describe 'Initial value should be reasigned' {
-		BeforeAll {
-			$script:environmentVariableName = "test$(New-Guid)"
-			$script:InitialValue = 'Some value here and there'
-			$script:UpdatedValue = 'Some updated value'
-			$script:Message = 'Some message here and there'
-			[Environment]::SetEnvironmentVariable($environmentVariableName, $InitialValue)
-		}
-		It 'Throw' {
-			{ Mock-EnvironmentVariable `
-					-Variable $environmentVariableName `
-					-Value $UpdatedValue { throw $Message } 
-			} | Should -Throw -ExpectedMessage $Message
-			[Environment]::GetEnvironmentVariable($environmentVariableName) | Should -Be $InitialValue
-		}
-
-		AfterAll {
-			[Environment]::SetEnvironmentVariable($EnvironmentVariableName, $null)
+	@{
+		InitialValue = 'Initial Value';
+		MockedValue  = $null; 
+		Script       = { 
+			throw 'Some exception here and there'
 		}
 	}
-
-	Describe 'Created variable should be destroyed' {
-		BeforeAll {
-			$script:environmentVariableName = "test$(New-Guid)"
-			$script:environmentVariable = "env:${environmentVariableName}"
-			$script:InitialValue = 'Some value here and there'
-			$script:UpdatedValue = 'Some updated value'
-			$script:Message = 'Some message here and there'
-		}
-		It 'Throw' {
-			{ Mock-EnvironmentVariable `
-					-Variable $environmentVariableName `
-					-Value $UpdatedValue { throw $Message } 
-			} | Should -Throw -ExpectedMessage $Message
-			[Environment]::GetEnvironmentVariable($environmentVariableName) | Should -Be $null
-		}
-
-		AfterAll {
-			[Environment]::SetEnvironmentVariable($EnvironmentVariableName, $null)
+	@{
+		InitialValue = $null;
+		MockedValue  = 'Mocked Value'; 
+		Script       = { 
+			throw 'Some exception here and there'
 		}
 	}
-
-	Describe 'Set up environment variable is cleared up' {
-		BeforeAll {
-			$environmentVariableName = "test$(New-Guid)"
+	@{
+		InitialValue = $null;
+		MockedValue  = $null; 
+		Script       = { 
+			throw 'Some exception here and there'
 		}
-
-		It 'Set up environment variable is cleared up' {
+	}
+) {
+	BeforeAll {
+		$environmentVariableName = "test_$(New-Guid)"
+		[Environment]::SetEnvironmentVariable($environmentVariableName, $InitialValue)
+	}
+	It 'Test' {
+		{ 
 			Mock-EnvironmentVariable `
-				-Variable $environmentVariableName { 
-				New-Item -Path $environmentVariable -Value 'Some value'
+				-Variable $environmentVariableName `
+				-Value $MockedValue {
+				Invoke-Command -ScriptBlock $script -ArgumentList $environmentVariableName
 			} 
-			[Environment]::GetEnvironmentVariable($environmentVariableName) | Should -Be $null
-		}
-
-		AfterAll {
-			[Environment]::SetEnvironmentVariable($EnvironmentVariableName, $null)
-		}
+		} | Should -Throw  
+		[Environment]::GetEnvironmentVariable($environmentVariableName) | Should -Be $InitialValue
+	}
+	AfterAll {
+		[Environment]::SetEnvironmentVariable($environmentVariableName, $null)
 	}
 }
