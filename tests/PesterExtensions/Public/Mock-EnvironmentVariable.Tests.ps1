@@ -12,7 +12,7 @@ Describe 'Mock an environment variable' {
 	
 	It 'Code is called' {
 		$script:called = $false
-		Mock-EnvironmentVariable -Variable $environmentVariableName -Value $InitialValue {
+		Mock-EnvironmentVariable -Variable $environmentVariableName -Value $InitialValue -Fixture {
 			$script:called = $true
 		}
 		$called | Should -BeTrue
@@ -24,183 +24,286 @@ Describe 'Mock an environment variable' {
 }
 
 Describe 'Check env mocking' -ForEach @(
-	@{ 
+	@{
+		Arguments            = @{
+			Value = 'Mocked Value';
+		}
+		MockedTargets        = @([EnvironmentVariableTarget]::Process)
 		InitialValue         = 'Initial Value';
-		MockedValue          = 'Mocked Value'; 
 		ValueInsideTheScript = 'Mocked Value';
 		Script               = { }
 	}
-	@{ 
+	@{
+		Arguments            = @{
+			Value = 'Mocked Value'
+		}
+		MockedTargets        = @([EnvironmentVariableTarget]::Process)
 		InitialValue         = $null; 
-		MockedValue          = 'Mocked Value'; 
 		ValueInsideTheScript = 'Mocked Value';
 		Script               = { }
 	}
-	@{ 
+	@{
+		Arguments            = @{ }
+		MockedTargets        = @([EnvironmentVariableTarget]::Process)
 		InitialValue         = 'Initial Value'; 
-		MockedValue          = $null; 
 		ValueInsideTheScript = 'Initial Value';
 		Script               = { }
 	}
 	@{ 
-		Script = { } 
+		MockedTargets = @([EnvironmentVariableTarget]::Process)
+		Script        = { } 
 	}
 	@{
+		Arguments            = @{
+			Value = 'Mocked Value'
+		}
+		MockedTargets        = @([EnvironmentVariableTarget]::Process)
 		InitialValue         = 'Initial Value';
-		MockedValue          = 'Mocked Value'; 
 		ValueInsideTheScript = 'Mocked Value';
 		Script               = { 
 			[Environment]::SetEnvironmentVariable($args[0], 'Some updated value') 
 		}
 	}
 	@{
+		Arguments            = @{ }
+		MockedTargets        = @([EnvironmentVariableTarget]::Process)
 		InitialValue         = 'Initial Value';
-		MockedValue          = $null; 
 		ValueInsideTheScript = 'Initial Value';
 		Script               = { 
 			[Environment]::SetEnvironmentVariable($args[0], 'Some updated value') 
 		}
 	}
 	@{
+		Arguments            = @{
+			Value = 'Mocked Value'
+		}
+		MockedTargets        = @([EnvironmentVariableTarget]::Process)
 		InitialValue         = $null;
-		MockedValue          = 'Mocked Value'; 
 		ValueInsideTheScript = 'Mocked Value';
 		Script               = { 
 			[Environment]::SetEnvironmentVariable($args[0], 'Some updated value') 
 		}
 	}
 	@{
+		Arguments            = @{ }
+		MockedTargets        = @([EnvironmentVariableTarget]::Process)
 		InitialValue         = $null;
-		MockedValue          = $null; 
 		ValueInsideTheScript = $null;
 		Script               = { 
 			[Environment]::SetEnvironmentVariable($args[0], 'Some updated value') 
 		}
 	}
+
+	@{
+		Arguments            = @{
+			Value   = 'Mocked Value';
+			Targets = @([EnvironmentVariableTarget]::User)
+		}
+		MockedTargets        = @([EnvironmentVariableTarget]::User)
+		InitialValue         = 'Initial Value';
+		ValueInsideTheScript = 'Mocked Value';
+		Script               = { }
+	}
+	@{
+		Arguments            = @{
+			Value   = 'Mocked Value';
+			Targets = @([EnvironmentVariableTarget]::User)
+		}
+		MockedTargets        = @([EnvironmentVariableTarget]::User)
+		InitialValue         = $null; 
+		ValueInsideTheScript = 'Mocked Value';
+		Script               = { }
+	}
+	@{
+		Arguments            = @{ 
+			Targets = @([EnvironmentVariableTarget]::User)
+		}
+		MockedTargets        = @([EnvironmentVariableTarget]::User)
+		InitialValue         = 'Initial Value'; 
+		ValueInsideTheScript = 'Initial Value';
+		Script               = { }
+	}
+	@{ 
+		Arguments     = @{
+			Targets = @([EnvironmentVariableTarget]::User)
+		}
+		MockedTargets = @([EnvironmentVariableTarget]::User)
+		Script        = { } 
+	}
+	@{
+		Arguments            = @{
+			Targets = @([EnvironmentVariableTarget]::User)
+			Value   = 'Mocked Value'
+		}
+		MockedTargets        = @([EnvironmentVariableTarget]::User)
+		InitialValue         = 'Initial Value';
+		ValueInsideTheScript = 'Mocked Value';
+		Script               = { 
+			[Environment]::SetEnvironmentVariable($args[0], 'Some updated value', 'User') 
+		}
+	}
+	@{
+		Arguments            = @{ 
+			Targets = @([EnvironmentVariableTarget]::User)
+		}
+		MockedTargets        = @([EnvironmentVariableTarget]::User)
+		InitialValue         = 'Initial Value';
+		ValueInsideTheScript = 'Initial Value';
+		Script               = { 
+			[Environment]::SetEnvironmentVariable($args[0], 'Some updated value', 'User')
+		}
+	}
+	@{
+		Arguments            = @{
+			Value   = 'Mocked Value';
+			Targets = @([EnvironmentVariableTarget]::User)
+		}
+		MockedTargets        = @([EnvironmentVariableTarget]::User)
+		InitialValue         = $null;
+		ValueInsideTheScript = 'Mocked Value';
+		Script               = { 
+			[Environment]::SetEnvironmentVariable($args[0], 'Some updated value', 'User')
+		}
+	}
+	@{
+		Arguments            = @{ 
+			Targets = @([EnvironmentVariableTarget]::User)
+		}
+		MockedTargets        = @([EnvironmentVariableTarget]::User)
+		InitialValue         = $null;
+		ValueInsideTheScript = $null;
+		Script               = { 
+			[Environment]::SetEnvironmentVariable($args[0], 'Some updated value', 'User') 
+		}
+	}
+
+	@{
+		Arguments            = @{
+			Value   = 'Mocked Value';
+			Targets = @([EnvironmentVariableTarget]::User, [EnvironmentVariableTarget]::Process)
+		}
+		MockedTargets        = @([EnvironmentVariableTarget]::User, [EnvironmentVariableTarget]::Process)
+		InitialValue         = 'Initial Value';
+		ValueInsideTheScript = 'Mocked Value';
+		Script               = { }
+	}
+	@{
+		Arguments            = @{
+			Value   = 'Mocked Value';
+			Targets = @([EnvironmentVariableTarget]::User, [EnvironmentVariableTarget]::Process)
+		}
+		MockedTargets        = @([EnvironmentVariableTarget]::User, [EnvironmentVariableTarget]::Process)
+		InitialValue         = $null; 
+		ValueInsideTheScript = 'Mocked Value';
+		Script               = { }
+	}
+	@{
+		Arguments            = @{ 
+			Targets = @([EnvironmentVariableTarget]::User, [EnvironmentVariableTarget]::Process)
+		}
+		MockedTargets        = @([EnvironmentVariableTarget]::User, [EnvironmentVariableTarget]::Process)
+		InitialValue         = 'Initial Value'; 
+		ValueInsideTheScript = 'Initial Value';
+		Script               = { }
+	}
+	@{ 
+		Arguments     = @{
+			Targets = @([EnvironmentVariableTarget]::User, [EnvironmentVariableTarget]::Process)
+		}
+		MockedTargets = @([EnvironmentVariableTarget]::User, [EnvironmentVariableTarget]::Process)
+		Script        = { } 
+	}
+	@{
+		Arguments            = @{
+			Targets = @([EnvironmentVariableTarget]::User, [EnvironmentVariableTarget]::Process)
+			Value   = 'Mocked Value'
+		}
+		MockedTargets        = @([EnvironmentVariableTarget]::User, [EnvironmentVariableTarget]::Process)
+		InitialValue         = 'Initial Value';
+		ValueInsideTheScript = 'Mocked Value';
+		Script               = { 
+			[Environment]::SetEnvironmentVariable($args[0], 'Some updated value', 'User') 
+			[Environment]::SetEnvironmentVariable($args[0], 'Some updated value', 'Process') 
+		}
+	}
+	@{
+		Arguments            = @{ 
+			Targets = @([EnvironmentVariableTarget]::User, [EnvironmentVariableTarget]::Process)
+		}
+		MockedTargets        = @([EnvironmentVariableTarget]::User, [EnvironmentVariableTarget]::Process)
+		InitialValue         = 'Initial Value';
+		ValueInsideTheScript = 'Initial Value';
+		Script               = { 
+			[Environment]::SetEnvironmentVariable($args[0], 'Some updated value', 'User')
+			[Environment]::SetEnvironmentVariable($args[0], 'Some updated value', 'Process')
+		}
+	}
+	@{
+		Arguments            = @{
+			Value   = 'Mocked Value';
+			Targets = @([EnvironmentVariableTarget]::User, [EnvironmentVariableTarget]::Process)
+		}
+		MockedTargets        = @([EnvironmentVariableTarget]::User, [EnvironmentVariableTarget]::Process)
+		InitialValue         = $null;
+		ValueInsideTheScript = 'Mocked Value';
+		Script               = { 
+			[Environment]::SetEnvironmentVariable($args[0], 'Some updated value', 'User')
+			[Environment]::SetEnvironmentVariable($args[0], 'Some updated value', 'Process')
+		}
+	}
+	@{
+		Arguments            = @{ 
+			Targets = @([EnvironmentVariableTarget]::User, [EnvironmentVariableTarget]::Process)
+		}
+		MockedTargets        = @([EnvironmentVariableTarget]::User, [EnvironmentVariableTarget]::Process)
+		InitialValue         = $null;
+		ValueInsideTheScript = $null;
+		Script               = { 
+			[Environment]::SetEnvironmentVariable($args[0], 'Some updated value', 'User') 
+			[Environment]::SetEnvironmentVariable($args[0], 'Some updated value', 'Process') 
+		}
+	}
 ) {
 	BeforeAll {
 		$environmentVariableName = "test_$(New-Guid)"
-		[Environment]::SetEnvironmentVariable($environmentVariableName, $InitialValue)
+		foreach	($target in $MockedTargets) {
+			[Environment]::SetEnvironmentVariable($environmentVariableName, $InitialValue, $target)
+		}
 	}
-	It 'Test' {
-		Mock-EnvironmentVariable `
-			-Variable $environmentVariableName `
-			-Value $MockedValue {
-			[Environment]::GetEnvironmentVariable($environmentVariableName) | Should -Be $ValueInsideTheScript
+	It 'Test <MockedTargets>' {
+		Mock-EnvironmentVariable -Variable $environmentVariableName @arguments -Fixture {
+			foreach ($target in $MockedTargets) {
+				[Environment]::GetEnvironmentVariable($environmentVariableName, $target) | Should -Be $ValueInsideTheScript
+			}
 			Invoke-Command -ScriptBlock $script -ArgumentList $environmentVariableName
-		} 
-		[Environment]::GetEnvironmentVariable($environmentVariableName) | Should -Be $InitialValue
+		}
+		foreach ($target in $MockedTargets) {
+			[Environment]::GetEnvironmentVariable($environmentVariableName, $target) | Should -Be $InitialValue
+		}
 	}
 	AfterAll {
-		[Environment]::SetEnvironmentVariable($environmentVariableName, $null)
+		foreach ($target in $MockedTargets) {
+			[Environment]::SetEnvironmentVariable($environmentVariableName, $null, $target)
+		}
 	}
 }
-
-# Describe 'Check env mocking' -ForEach @(
-# 	@{ 
-# 		InitialValue         = 'Initial Value';
-# 		MockedValue          = 'Mocked Value'; 
-# 		ValueInsideTheScript = 'Mocked Value';
-# 		TargetsToSet          = @([EnvironmentVariableTarget]::Process)
-# 		TargetNotToSet       = ''
-# 		Script               = { }
-# 	}
-# 	@{ 
-# 		InitialValue         = $null; 
-# 		MockedValue          = 'Mocked Value'; 
-# 		ValueInsideTheScript = 'Mocked Value';
-# 		Script               = { }
-# 	}
-# 	@{ 
-# 		InitialValue         = 'Initial Value'; 
-# 		MockedValue          = $null; 
-# 		ValueInsideTheScript = 'Initial Value';
-# 		Script               = { }
-# 	}
-# 	@{ 
-# 		Script = { } 
-# 	}
-# 	@{
-# 		InitialValue         = 'Initial Value';
-# 		MockedValue          = 'Mocked Value'; 
-# 		ValueInsideTheScript = 'Mocked Value';
-# 		Script               = { 
-# 			[Environment]::SetEnvironmentVariable($args[0], 'Some updated value') 
-# 		}
-# 	}
-# 	@{
-# 		InitialValue         = 'Initial Value';
-# 		MockedValue          = $null; 
-# 		ValueInsideTheScript = 'Initial Value';
-# 		Script               = { 
-# 			[Environment]::SetEnvironmentVariable($args[0], 'Some updated value') 
-# 		}
-# 	}
-# 	@{
-# 		InitialValue         = $null;
-# 		MockedValue          = 'Mocked Value'; 
-# 		ValueInsideTheScript = 'Mocked Value';
-# 		Script               = { 
-# 			[Environment]::SetEnvironmentVariable($args[0], 'Some updated value') 
-# 		}
-# 	}
-# 	@{
-# 		InitialValue         = $null;
-# 		MockedValue          = $null; 
-# 		ValueInsideTheScript = $null;
-# 		Script               = { 
-# 			[Environment]::SetEnvironmentVariable($args[0], 'Some updated value') 
-# 		}
-# 	}
-# ) {
-# 	BeforeAll {
-# 		$environmentVariableName = "test_$(New-Guid)"
-# 		[Environment]::SetEnvironmentVariable($environmentVariableName, $InitialValue)
-# 	}
-# 	It 'Test' {
-# 		Mock-EnvironmentVariable `
-# 			-Variable $environmentVariableName `
-# 			-Value $MockedValue {
-# 			[Environment]::GetEnvironmentVariable($environmentVariableName) | Should -Be $ValueInsideTheScript
-# 			Invoke-Command -ScriptBlock $script -ArgumentList $environmentVariableName
-# 		} 
-# 		[Environment]::GetEnvironmentVariable($environmentVariableName) | Should -Be $InitialValue
-# 	}
-# 	AfterAll {
-# 		[Environment]::SetEnvironmentVariable($environmentVariableName, $null)
-# 	}
-# }
-
-
 
 Describe 'Should throw' -ForEach @(
 	@{
 		InitialValue = 'Initial Value';
-		MockedValue  = 'Mocked Value'; 
-		Script       = { 
-			throw 'Some exception here and there'
-		}
+		MockedValue  = 'Mocked Value';
 	}
 	@{
 		InitialValue = 'Initial Value';
 		MockedValue  = $null; 
-		Script       = { 
-			throw 'Some exception here and there'
-		}
 	}
 	@{
 		InitialValue = $null;
 		MockedValue  = 'Mocked Value'; 
-		Script       = { 
-			throw 'Some exception here and there'
-		}
 	}
 	@{
 		InitialValue = $null;
 		MockedValue  = $null; 
-		Script       = { 
-			throw 'Some exception here and there'
-		}
 	}
 ) {
 	BeforeAll {
@@ -212,7 +315,7 @@ Describe 'Should throw' -ForEach @(
 			Mock-EnvironmentVariable `
 				-Variable $environmentVariableName `
 				-Value $MockedValue {
-				Invoke-Command -ScriptBlock $script -ArgumentList $environmentVariableName
+				throw 'Some exception here and there'
 			} 
 		} | Should -Throw  
 		[Environment]::GetEnvironmentVariable($environmentVariableName) | Should -Be $InitialValue

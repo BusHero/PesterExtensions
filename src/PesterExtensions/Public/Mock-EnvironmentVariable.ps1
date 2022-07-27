@@ -1,53 +1,68 @@
-function Mock-EnvironmentVariable {
+function Restore {
 	param (
-		[parameter(Mandatory = $true, Position = 0)]
 		[string]
 		$Variable,
 		
+		[EnvironmentVariableTarget[]]
+		$Targets,
+
+		[hashtable]
+		$Backup
+	)
+	foreach ($target in $targets) {
+		[Environment]::SetEnvironmentVariable($Variable, $Backup[$target], $target)
+	}
+}
+
+function Set-Values {
+	param (
+		[string]
+		$Variable,
+		
+		[EnvironmentVariableTarget[]]
+		$Targets,
+
+		[string]
+		$value
+	)
+	$Backup = @{}
+	
+	foreach ($target in $Targets) {
+		$OriginalValue = [Environment]::GetEnvironmentVariable($Variable, $target)
+		$Backup.Add($target, $OriginalValue)
+		if ($Value) {
+			[Environment]::SetEnvironmentVariable($Variable, $Value, $target)
+		}
+	}
+	
+	return $Backup
+}
+
+
+function Mock-EnvironmentVariable {
+	param (
+		[parameter(Mandatory = $true)]
+		[string]
+		$Variable,
+		
+		[Parameter(Mandatory = $true)]
+		[ScriptBlock]
+		$Fixture,
+
 		[Parameter(Mandatory = $false)]
 		[string]
 		$Value,
 
 		[Parameter(Mandatory = $false)]
-		[System.EnvironmentVariableTarget]
-		$Targets = [EnvironmentVariableTarget]::Process,
-
-		[Parameter(Mandatory = $true, Position = 1)]
-		[ScriptBlock]
-		$Fixture
-
+		[EnvironmentVariableTarget[]]
+		$Targets = @([EnvironmentVariableTarget]::Process)
 	)
-	$EnvironmentVariable = "env:${Variable}"
 
-	if (Test-Path -Path $EnvironmentVariable) {
-		$OriginalValue = (Get-ChildItem -Path $EnvironmentVariable).Value
-		if ($value) {
-			Set-Item -Path $EnvironmentVariable -Value $Value
-		}
-	}
-	else {
-		New-Item -Path $EnvironmentVariable -Value $Value | Out-Null
-	}
-	try {
-		Invoke-Command -ScriptBlock $Fixture
-	}
+	$Backup = Set-Values -Variable $Variable -Targets $Targets -value $Value
 
-	catch {
-		throw $_
-	}
-
-	finally {
-		if ($OriginalValue) {
-			Set-Item -Path $EnvironmentVariable -Value $OriginalValue
-		}
-		elseif (Test-Path -Path $EnvironmentVariable) {
-			Remove-Item `
-				-Path $EnvironmentVariable `
-				-Recurse `
-				-Force `
-				-ErrorAction Stop
-		}
-	}
+	try { Invoke-Command -ScriptBlock $Fixture }
+	catch { throw $_ }
+	finally { Restore -Variable $Variable -Targets $Targets -Backup $Backup }
 
 	<#
 	.PARAMETER Variable
