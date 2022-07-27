@@ -3,13 +3,13 @@ param(
 )
 
 BeforeAll {
-	Import-Module -Name PesterExtensions
+	Import-Module -Name PesterExtensions -DisableNameChecking
 	$ModulePath = "$(Get-ScriptPath -Path $PSCommandPath -Extension Manifest)"
 	Remove-Module -Name PesterExtensions
 
 	$script:ModuleInfo = Test-ModuleManifest -Path $ModulePath
 
-	Import-Module $ModulePath
+	Import-Module $ModulePath -DisableNameChecking
 	$script:ImportedModule = Get-Module 'PesterExtensions'
 }
 
@@ -73,7 +73,7 @@ Describe 'Check functions' -ForEach @(
 		Parameters  = @(
 			@{ Parameter = 'Variable'; Mandatory = $true }
 			@{ Parameter = 'Value'; Mandatory = $false }
-			@{ Parameter = 'Target'; Mandatory = $false }
+			@{ Parameter = 'Targets'; Mandatory = $false }
 			@{ Parameter = 'Fixture'; Mandatory = $true }
 		)
 	}

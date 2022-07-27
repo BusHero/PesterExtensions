@@ -10,7 +10,7 @@ function Mock-EnvironmentVariable {
 
 		[Parameter(Mandatory = $false)]
 		[System.EnvironmentVariableTarget]
-		$Target = [System.EnvironmentVariableTarget]::Process,
+		$Targets = [EnvironmentVariableTarget]::Process,
 
 		[Parameter(Mandatory = $true, Position = 1)]
 		[ScriptBlock]
@@ -59,7 +59,7 @@ function Mock-EnvironmentVariable {
 	.PARAMETER Fixture
 	The code to be executed.
 
-	.PARAMETER Target
+	.PARAMETER Targets
 	Specifies that user environment variable should also be managed.
 	#>
 }

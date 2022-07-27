@@ -1,5 +1,5 @@
 BeforeAll {
-	Import-Module -Name PesterExtensions
+	Import-Module -Name PesterExtensions -DisableNameChecking
 	. "$(Get-ScriptPath -Path $PSCommandPath -Extension Script)"
 	Remove-Module -Name PesterExtensions
 }
