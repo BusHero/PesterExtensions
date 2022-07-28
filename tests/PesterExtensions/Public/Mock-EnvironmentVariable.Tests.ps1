@@ -317,7 +317,7 @@ Describe 'Should throw' -ForEach @(
 				-Value $MockedValue {
 				throw 'Some exception here and there'
 			} 
-		} | Should -Throw  
+		} | Should -Throw -ExpectedMessage 'Some exception here and there'
 		[Environment]::GetEnvironmentVariable($environmentVariableName) | Should -Be $InitialValue
 	}
 	AfterAll {
