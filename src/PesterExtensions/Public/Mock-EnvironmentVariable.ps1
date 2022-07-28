@@ -1,23 +1,19 @@
 function Restore {
 	param (
-		[string]
-		$Variable,
-		
-		[EnvironmentVariableTarget[]]
-		$Targets,
-
 		[hashtable]
 		$Backup
 	)
-	foreach ($target in $targets) {
-		[Environment]::SetEnvironmentVariable($Variable, $Backup[$target], $target)
+	foreach ($variable in $Backup.Keys) {
+		foreach ($target in $Backup.$variable.Keys) {
+			[Environment]::SetEnvironmentVariable($variable, $Backup.$variable.$target, $target)
+		}
 	}
 }
 
-function Set-Values {
+function Backup {
 	param (
-		[string]
-		$Variable,
+		[string[]]
+		$Variables,
 		
 		[EnvironmentVariableTarget[]]
 		$Targets,
@@ -26,13 +22,17 @@ function Set-Values {
 		$value
 	)
 	$Backup = @{}
-	
-	foreach ($target in $Targets) {
-		$OriginalValue = [Environment]::GetEnvironmentVariable($Variable, $target)
-		$Backup.Add($target, $OriginalValue)
-		if ($Value) {
-			[Environment]::SetEnvironmentVariable($Variable, $Value, $target)
+
+	foreach ($variable in $Variables) {
+		$VariableBackup = @{}
+		foreach ($target in $Targets) {
+			$OriginalValue = [Environment]::GetEnvironmentVariable($variable, $target)
+			$VariableBackup.Add($target, $OriginalValue)
+			if ($Value) {
+				[Environment]::SetEnvironmentVariable($variable, $Value, $target)
+			}
 		}
+		$Backup.Add($variable, $VariableBackup)
 	}
 	
 	return $Backup
@@ -42,7 +42,7 @@ function Set-Values {
 function Mock-EnvironmentVariable {
 	param (
 		[parameter(Mandatory = $true)]
-		[string]
+		[string[]]
 		$Variable,
 		
 		[Parameter(Mandatory = $true)]
@@ -58,11 +58,10 @@ function Mock-EnvironmentVariable {
 		$Targets = @([EnvironmentVariableTarget]::Process)
 	)
 
-	$Backup = Set-Values -Variable $Variable -Targets $Targets -value $Value
+	$Backup = Backup -Variables $Variable -Targets $Targets -value $Value
 
 	try { Invoke-Command -ScriptBlock $Fixture }
-	catch { throw $_ }
-	finally { Restore -Variable $Variable -Targets $Targets -Backup $Backup }
+	finally { Restore -Backup $Backup }
 
 	<#
 	.PARAMETER Variable
