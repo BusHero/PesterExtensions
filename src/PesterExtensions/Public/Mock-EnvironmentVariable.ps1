@@ -1,3 +1,27 @@
+function Set-EnvironmentVariable {
+	param (
+		[string]
+		$Variable,
+
+		[string]
+		$Value,
+
+		[EnvironmentVariableTarget]
+		$Target
+	)
+	if ($Target -eq [System.EnvironmentVariableTarget]::Process) {
+		[System.Environment]::SetEnvironmentVariable($Variable, $value, 'Process')
+	}
+	elseif ($Target -eq [System.EnvironmentVariableTarget]::User) {
+		if ($Value) {
+			New-ItemProperty -Path 'HKCU:\Environment' -Name $Variable -Value $Value -Force > $null
+		}
+		else {
+			Remove-ItemProperty -Path 'HKCU:\Environment' -Name $Variable -ErrorAction Ignore
+		}
+	}
+}
+
 function Restore {
 	param (
 		[hashtable]
@@ -5,7 +29,7 @@ function Restore {
 	)
 	foreach ($variable in $Backup.Keys) {
 		foreach ($target in $Backup.$variable.Keys) {
-			[Environment]::SetEnvironmentVariable($variable, $Backup.$variable.$target, $target)
+			Set-EnvironmentVariable -Variable $variable -Value $Backup.$variable.$target -Target $target
 		}
 	}
 }
@@ -29,7 +53,7 @@ function Backup {
 			$OriginalValue = [Environment]::GetEnvironmentVariable($variable, $target)
 			$VariableBackup.Add($target, $OriginalValue)
 			if ($Value) {
-				[Environment]::SetEnvironmentVariable($variable, $Value, $target)
+				Set-EnvironmentVariable -Variable $variable -Value $value -Target $target
 			}
 		}
 		$Backup.Add($variable, $VariableBackup)
